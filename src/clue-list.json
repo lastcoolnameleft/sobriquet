@@ -1,0 +1,13 @@
+[
+    { "name": "Doge", "description": "An internet meme", "points": 3, "category": "celebrity"},
+    { "name": "A Russian Nesting Doll", "description": "Color wooden figurines", "points": 2, "category": "et cetera"},
+    { "name": "Covid-19", "description": "Why this got started", "points": 2, "category": "et cetera"},
+    { "name": "Kobayashi", "description": "Japanese competitive eater", "points": 2, "category": "celebrity"},
+    { "name": "basketball", "description": "It puts the ball in the basket else it gets the defense again", "points": 2, "category": "sports" },
+    { "name": "computer", "description": "The thing you are running this on", "points": 1, "category": "technology" },
+    { "name": "Zelda", "description": "The princess, not the elf", "points": 2, "category": "games" },
+    { "name": "whiskey", "description": "How I survive this pandemic", "points": 2, "category": "drinks" },
+    { "name": "crochet", "description": "Guys do it too.  It's called Brocket.  And I love it", "points": 3, "category": "et cetera" },
+    { "name": "monkey", "description": "They're always funny.", "points": 2, "category": "animals"  },
+    { "name": "Letterkenny", "description": "A Texas sized 10-4", "points": 4, "category": "entertainment" }
+]
