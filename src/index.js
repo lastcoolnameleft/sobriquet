@@ -5,10 +5,15 @@ var eventBus = new Vue()
 
 Vue.component('clue-giver', {
     props: {
-        clue: {
-            type: Object,
+        clueIndex: {
+            type: Number,
             required: true
         }
+    },
+    computed: {
+        clue() {
+            return this.clueIndex >= 0 ? fullClueList[this.clueIndex] : { name: '', description: ''}
+        } 
     },
     template: `
         <div>
@@ -22,7 +27,7 @@ Vue.component('clue-giver', {
     `,
     methods: {
         clueGiverSuccess() {
-            eventBus.$emit('clue-giver-success', this.clue)
+            eventBus.$emit('clue-giver-success', this.clueIndex)
         }
     }
 })
@@ -31,33 +36,54 @@ var app = new Vue({
     template: `
         <div>
             <div>
+                <button v-on:click="startGame">START GAME</button>
+            </div>
+
+            <div>
                 <button v-on:click="startRound">START ROUND</button>
             </div>
 
             <b>You are the {{persona}}</b>
-            <clue-giver :clue="currentClue"></clue-giver>
+            <clue-giver :clueIndex="currentClueIndex"></clue-giver>
         </div>
     `,
     el: '#app',
     data: {
         persona: 'clue-giver',
-        currentClue: {},
-        clueList: [...fullClueList],
+        currentClueIndex: -1,
+        maxSelectedCards: 5,
+        clueListSelected: null,
+        clueListInPlay: null,
     },
     methods: {
-        startRound() {
-           this.currentClue = this.pickAndRemoveRandomClue() 
+        pickRandomCards(noToPick, noOfCards) {
+            console.log('pickRandomCards()')
+            return _.slice(_.shuffle(Array(noOfCards).fill().map((_, i) => i)), 0, noToPick)
         },
-        pickAndRemoveRandomClue() {
-            clue = this.clueList.splice(_.random(this.clueList.length - 1), 1)[0]
-            console.log('New Clue = ' + clue.name)
-            return clue
-        }
+        startGame() {
+            console.log('startGame()')
+           this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, fullClueList.length - 1)
+           console.log('Game Started: ' + this.clueListSelected)
+        },
+        startRound() {
+            console.log('startRound()')
+           this.currentClueIndex = this.drawClue()
+        },
+        drawClue() {
+            console.log('drawClue()')
+            return this.clueListSelected.pop()
+        },
+        clueSuccess() {
+
+        },
+        cluePass() {
+        },
+
 
     },
     mounted() {
-        eventBus.$on('clue-giver-success', clue => (
-            console.log('Successfully guessed:' + clue.name)
+        eventBus.$on('clue-giver-success', clueIndex => (
+            console.log('Successfully guessed:' + fullClueList[clueIndex].name)
             //this.reviews.push(productReview)
         ))
     }
