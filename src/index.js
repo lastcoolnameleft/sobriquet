@@ -9,7 +9,11 @@ Vue.component('clue-giver', {
             type: Number,
             required: true
         },
-        state: {
+        gameState: {
+            type: String,
+            required: true
+        },
+        roundState: {
             type: String,
             required: true
         },
@@ -19,22 +23,25 @@ Vue.component('clue-giver', {
             console.log('clue()')
             return this.clueIndex >= 0 ? fullClueList[this.clueIndex] : { name: '', description: ''}
         },
-        gameStarted() {
-            return this.state === 'game-started' || this.state === 'round-started'
+        isGameStarted() {
+            return this.gameState === 'started'
         },
-        roundStarted() {
+        isRoundStarted() {
             console.log('roundStarted()')
-            console.log(this.state)
-            console.log(this.state === 'round-started')
-            return this.state === 'round-started'
+            return this.roundState === 'started'
         },
     },
     template: `
         <div>
-            <div v-show="roundStarted">
+            <div v-show="isRoundStarted">
                 <p>
-                    <b>Your clue is {{clue.name}} ({{clueIndex}})</b>
-                    {{clue.description}}
+                    Your clue is: <b>{{clue.name}}</b></b>
+                </p>
+                <p>
+                    Description: {{clue.description}}
+                </p>
+                <p>
+                    Points: {{clue.points}}
                 </p>
                 <button v-on:click="clueGiverSuccess">Success!</button> 
                 <button v-on:click="clueGiverPass">Pass</button> 
@@ -54,19 +61,62 @@ Vue.component('clue-giver', {
 var app = new Vue({
     template: `
         <div>
-            <div v-show="shouldStartGameBeVisible">
+            <div v-show="isGameStarted">
+                <p>Scores:</p>
+                <p><b>Team #1:</b> {{team1Score}}</p>
+                <p><b>Team #2:</b> {{team2Score}}</p>
+            </div>
+            <div v-show="isGameWaiting">
+                <p>Welcome to an online webapp version of Monikers, a dumb party game that respects you intelligence.</p>
+                <b>Rules:</b></br>
+                
+                <p>A person from the starting team has 60 seconds to get their team to guess as many names as possible from the deck by giving clues about the card's identity. There’s no limit to the number of guesses.</p>
+            
+                <p>Skipping is allowed and highly encouraged in all rounds.</p>
+              
+                <p>Teams keep the cards they guessed correctly for scoring. Skipped cards are reshuffled into the deck after each turn.</p>
+               
+                <p>Teams take turns giving clues. Each player should take a turn giving clues before any teammates repeat.</p>
+                
+                <p>A round ends when all cards from the deck have been guessed correctly. When that happens, teams add the point values from each card they correctly guessed.</p>
+                
+                <p>The team with the lowest score begins the next round.</p>
+
+                <p>For any questions, check out the <a href='https://s3.amazonaws.com/www.monikersgame.com/Press+kit/Monikers+PnP.pdf'>complete rules</a>.</p>
                 <button v-on:click="startGame">START GAME</button>
             </div>
 
-            <div v-show="shouldStartRoundBeVisible">
+            <div v-show="isRoundWaiting">
+                <p>Monikers has 3 rounds. Each has a restriction on how players are allowed to give clues:</p>
+                <p><b>ROUND 1:</b> You can use any words, sounds, or gestures except the name itself, including the clue text on the card. If you say any part of the name, you have to skip that card this turn.</p>
+                <p><b>ROUND 2:</b> Use only one word, which can be anything except the name itself. You can repeat that word as many times as you like, but no sounds or gestures.</p>
+                <p><b>ROUND 3:</b> Just charades. No words. Sound effects are OK.</p>
                 <button v-on:click="startRound">START ROUND</button>
+            </div>
+
+            <div v-show="isRoundComplete">
+                <p><b>Round {{roundIndex + 1}} complete.</b></p>
+
+                <div v-show="roundIndex == 0">
+                    <p>Rules for the next round:</p>
+                    <p><b>ROUND 2:</b> Use only one word, which can be anything except the name itself. You can repeat that word as many times as you like, but no sounds or gestures.</p>
+                    <button v-on:click="startRound">START ROUND</button>
+                </div>
+                <div v-show="roundIndex == 1">
+                    <p>Rules for the next round:</p>
+                    <p><b>ROUND 3:</b> Just charades. No words. Sound effects are OK.</p>
+                    <button v-on:click="startRound">START ROUND</button>
+                </div>
+                <div v-show="roundIndex == 2">
+                    <p>GAME OVER</p>
+                </div>
             </div>
 
             <div v-show="shouldGameDetailsBeVisible">
                 <b>You are the {{persona}}</b></br>
                 <b>Cards left: {{clueListInPlay}}</b></br>
                 <b># of Cards left: {{numberOfcardsLeftInPlay}}</b>
-                <clue-giver :clueIndex="currentClueIndex" :state="state"></clue-giver>
+                <clue-giver :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
             </div>
         </div>
     `,
@@ -78,7 +128,11 @@ var app = new Vue({
         fullClueList: fullClueList,
         clueListSelected: [],
         clueListInPlay: [],
-        state: 'waiting-for-game-to-start',
+        gameState: 'waiting',
+        roundState: 'waiting',
+        roundIndex: -1,
+        teamIndex: 0, // zero-indexed, so really Team 0 and Team 1, but we should display it as Team 1 and Team 2
+        scoredCardIndex: [[ [], [], [], ], [ [], [], [], ]] // 2 teams, 3 rounds, keep the index of each card that the team scores
     },
     methods: {
         // If we have 13 cards and want 5, Create an array of 0-12, shuffle it and then take the first 5 elements
@@ -91,14 +145,15 @@ var app = new Vue({
         startGame() {
             console.log('startGame()')
             this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, fullClueList.length - 1)
-            this.clueListInPlay = [...this.clueListSelected]
-            this.state = 'game-started'
+            this.gameState = 'started'
             console.log('Game Started: ' + this.clueListInPlay)
         },
         // Take the first card from the selected list and show it to the clue-giver
         startRound() {
             console.log('startRound()')
-            this.state = 'round-started'
+            this.clueListInPlay = [...this.clueListSelected]
+            this.roundState = 'started'
+            this.roundIndex += 1
             this.drawClue()
         },
         // Take the first card off the top of the In Play cards.
@@ -109,7 +164,12 @@ var app = new Vue({
         // Score points for that team (TBD) and draw a new card
         clueSuccess() {
             console.log('clueSuccess()')
-            this.drawClue()
+            this.scoredCardIndex[this.teamIndex][this.roundIndex].push(this.currentClueIndex)
+            if (this.numberOfcardsLeftInPlay > 0) {
+                this.drawClue()
+            } else {
+                this.roundState = 'complete'
+            }
         },
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
         cluePass() {
@@ -122,16 +182,34 @@ var app = new Vue({
     },
     computed: {
         numberOfcardsLeftInPlay() {
-            return this.clueListSelected.length
+            return this.clueListInPlay.length
         },
-        shouldStartGameBeVisible() {
-            return this.state === 'waiting-for-game-to-start'
+        isGameStarted() {
+            return this.gameState === 'started'
         },
-        shouldStartRoundBeVisible() {
-            return this.state === 'game-start' || this.state === 'game-started'
+        isGameWaiting() {
+            return this.gameState === 'waiting'
+        },
+        isRoundWaiting() {
+            return this.gameState === 'started' && this.roundState === 'waiting'
+        },
+        isRoundComplete() {
+            return this.gameState === 'started' && this.roundState === 'complete'
         },
         shouldGameDetailsBeVisible() {
-            return this.state === 'game-start' || this.state === 'round-started' || this.state === 'game-started'
+            return this.gameState === 'started' && this.roundState === 'started'
+        },
+        team1Score() {
+            team1round1 =  _.reduce(this.scoredCardIndex[0][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            team1round2 =  _.reduce(this.scoredCardIndex[0][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            team1round3 =  _.reduce(this.scoredCardIndex[0][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            return team1round1 + team1round2 + team1round3
+        },
+        team2Score() {
+            team2round1 =  _.reduce(this.scoredCardIndex[1][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            team2round2 =  _.reduce(this.scoredCardIndex[1][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            team2round3 =  _.reduce(this.scoredCardIndex[1][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            return team2round1 + team2round2 + team2round3
         },
     },
     mounted() {
