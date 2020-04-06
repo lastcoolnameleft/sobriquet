@@ -3,6 +3,31 @@ var fullClueList = require('./clue-list.json');
 
 var eventBus = new Vue()
 
+Vue.component('score', {
+    props: {
+        isGameStarted: {
+            type: Boolean,
+            required: true
+        },
+        team1Score: {
+            type: Number,
+            required: true
+        },
+        team2Score: {
+            type: Number,
+            required: true
+        },
+    },
+    template: `
+            <div >
+                <div v-show="isGameStarted" class="score">
+                    <p>Scores:</p>
+                    <p><b>Team #1:</b> {{team1Score}}</p>
+                    <p><b>Team #2:</b> {{team2Score}}</p>
+                </div>
+            </div>
+        `
+})
 
 Vue.component('clue-giver', {
     props: {
@@ -65,11 +90,7 @@ Vue.component('clue-giver', {
 var app = new Vue({
     template: `
         <div >
-            <div v-show="isGameStarted" class="score">
-                <p>Scores:</p>
-                <p><b>Team #1:</b> {{team1Score}}</p>
-                <p><b>Team #2:</b> {{team2Score}}</p>
-            </div>
+            <score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></score>
             <div v-show="isGameWaiting">
                 <p>Welcome to an online webapp version of Monikers, a dumb party game that respects you intelligence.</p>
                 <b>Rules:</b></br>
