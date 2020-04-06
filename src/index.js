@@ -3,6 +3,7 @@ var fullClueList = require('./clue-list.json');
 
 var eventBus = new Vue()
 
+
 Vue.component('clue-giver', {
     props: {
         clueIndex: {
@@ -43,6 +44,9 @@ Vue.component('clue-giver', {
                 <p>
                     Points: {{clue.points}}
                 </p>
+                <p>
+                    Category: {{clue.category}}
+                </p>
                 <button v-on:click="clueGiverSuccess">Success!</button> 
                 <button v-on:click="clueGiverPass">Pass</button> 
             </div>
@@ -60,8 +64,8 @@ Vue.component('clue-giver', {
 
 var app = new Vue({
     template: `
-        <div>
-            <div v-show="isGameStarted">
+        <div >
+            <div v-show="isGameStarted" class="score">
                 <p>Scores:</p>
                 <p><b>Team #1:</b> {{team1Score}}</p>
                 <p><b>Team #2:</b> {{team2Score}}</p>
@@ -114,8 +118,7 @@ var app = new Vue({
 
             <div v-show="shouldGameDetailsBeVisible">
                 <b>You are the {{persona}}</b></br>
-                <b>Cards left: {{clueListInPlay}}</b></br>
-                <b># of Cards left: {{numberOfcardsLeftInPlay}}</b>
+                <b># of Cards left: {{numberOfcardsLeftInPlay + 1}}</b>
                 <clue-giver :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
             </div>
         </div>
@@ -144,6 +147,8 @@ var app = new Vue({
         // The Selected cards are now "In Play".
         startGame() {
             console.log('startGame()')
+
+            // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
             this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, fullClueList.length - 1)
             this.gameState = 'started'
             console.log('Game Started: ' + this.clueListInPlay)
@@ -151,6 +156,7 @@ var app = new Vue({
         // Take the first card from the selected list and show it to the clue-giver
         startRound() {
             console.log('startRound()')
+            // Each time the round starts, we start over from the cards selected at the beginning
             this.clueListInPlay = [...this.clueListSelected]
             this.roundState = 'started'
             this.roundIndex += 1
@@ -172,6 +178,7 @@ var app = new Vue({
             }
         },
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
+        // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
         cluePass() {
             console.log('cluePass()')
             this.clueListInPlay.unshift(this.currentClueIndex)
