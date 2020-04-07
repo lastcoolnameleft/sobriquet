@@ -1,93 +1,12 @@
 var _ = require('lodash');
 var fullClueList = require('./clue-list.json');
+import Score from './components/Score'
+import ClueGiver from './components/ClueGiver'
 
 var eventBus = new Vue()
 
-Vue.component('score', {
-    props: {
-        isGameStarted: {
-            type: Boolean,
-            required: true
-        },
-        team1Score: {
-            type: Number,
-            required: true
-        },
-        team2Score: {
-            type: Number,
-            required: true
-        },
-    },
-    template: `
-            <div >
-                <div v-show="isGameStarted" class="score">
-                    <p>Scores:</p>
-                    <p><b>Team #1:</b> {{team1Score}}</p>
-                    <p><b>Team #2:</b> {{team2Score}}</p>
-                </div>
-            </div>
-        `
-})
-
-Vue.component('clue-giver', {
-    props: {
-        clueIndex: {
-            type: Number,
-            required: true
-        },
-        gameState: {
-            type: String,
-            required: true
-        },
-        roundState: {
-            type: String,
-            required: true
-        },
-    },
-    computed: {
-        clue() {
-            console.log('clue()')
-            return this.clueIndex >= 0 ? fullClueList[this.clueIndex] : { name: '', description: ''}
-        },
-        isGameStarted() {
-            return this.gameState === 'started'
-        },
-        isRoundStarted() {
-            console.log('roundStarted()')
-            return this.roundState === 'started'
-        },
-    },
-    template: `
-        <div>
-            <div v-show="isRoundStarted">
-                <p>
-                    Your clue is: <b>{{clue.name}}</b></b>
-                </p>
-                <p>
-                    Description: {{clue.description}}
-                </p>
-                <p>
-                    Points: {{clue.points}}
-                </p>
-                <p>
-                    Category: {{clue.category}}
-                </p>
-                <button v-on:click="clueGiverSuccess">Success!</button> 
-                <button v-on:click="clueGiverPass">Pass</button> 
-            </div>
-        </div>
-    `,
-    methods: {
-        clueGiverSuccess() {
-            eventBus.$emit('clue-giver-success', this.clueIndex)
-        },
-        clueGiverPass() {
-            eventBus.$emit('clue-giver-pass', this.clueIndex)
-        }
-    }
-})
-
 var app = new Vue({
+    components: { Score, ClueGiver },
     template: `
         <div >
             <score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></score>
@@ -140,12 +59,13 @@ var app = new Vue({
             <div v-show="shouldGameDetailsBeVisible">
                 <b>You are the {{persona}}</b></br>
                 <b># of Cards left: {{numberOfcardsLeftInPlay + 1}}</b>
-                <clue-giver :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
+                <clue-giver :eventBus="eventBus" :fullClueList="fullClueList" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
             </div>
         </div>
     `,
     el: '#app',
     data: {
+        eventBus: eventBus,
         persona: 'clue-giver',
         currentClueIndex: -1,
         maxSelectedCards: 5,
@@ -228,15 +148,15 @@ var app = new Vue({
             return this.gameState === 'started' && this.roundState === 'started'
         },
         team1Score() {
-            team1round1 =  _.reduce(this.scoredCardIndex[0][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
-            team1round2 =  _.reduce(this.scoredCardIndex[0][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
-            team1round3 =  _.reduce(this.scoredCardIndex[0][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team1round1 =  _.reduce(this.scoredCardIndex[0][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team1round2 =  _.reduce(this.scoredCardIndex[0][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team1round3 =  _.reduce(this.scoredCardIndex[0][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
             return team1round1 + team1round2 + team1round3
         },
         team2Score() {
-            team2round1 =  _.reduce(this.scoredCardIndex[1][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
-            team2round2 =  _.reduce(this.scoredCardIndex[1][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
-            team2round3 =  _.reduce(this.scoredCardIndex[1][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team2round1 =  _.reduce(this.scoredCardIndex[1][0], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team2round2 =  _.reduce(this.scoredCardIndex[1][1], function(sum, n) { return sum + fullClueList[n].points }, 0)
+            var team2round3 =  _.reduce(this.scoredCardIndex[1][2], function(sum, n) { return sum + fullClueList[n].points }, 0)
             return team2round1 + team2round2 + team2round3
         },
     },
