@@ -2,42 +2,21 @@ var _ = require('lodash');
 var fullClueList = require('./clue-list.json');
 import Score from './components/Score'
 import ClueGiver from './components/ClueGiver'
-import Welcome from './components/Welcome'
+import GameWaiting from './components/GameWaiting'
+import RoundWaiting from './components/RoundWaiting'
+import RoundComplete from './components/RoundComplete'
 
 var eventBus = new Vue()
 
 var app = new Vue({
-    components: { Score, ClueGiver, Welcome },
+    components: { Score, ClueGiver, GameWaiting, RoundWaiting, RoundComplete },
     template: `
         <div >
-            <score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></score>
-            <welcome :eventBus="eventBus" :isGameWaiting="isGameWaiting" :fullClueList="fullClueList"></welcome>
+            <Score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></Score>
+            <GameWaiting :eventBus="eventBus" :isGameWaiting="isGameWaiting" ></GameWaiting>
+            <RoundWaiting :eventBus="eventBus" :isRoundWaiting="isRoundWaiting" ></RoundWaiting>
+            <RoundComplete :eventBus="eventBus" :isRoundComplete="isRoundComplete" :roundIndex="roundIndex" ></RoundComplete>
 
-            <div v-show="isRoundWaiting">
-                <p>Monikers has 3 rounds. Each has a restriction on how players are allowed to give clues:</p>
-                <p><b>ROUND 1:</b> You can use any words, sounds, or gestures except the name itself, including the clue text on the card. If you say any part of the name, you have to skip that card this turn.</p>
-                <p><b>ROUND 2:</b> Use only one word, which can be anything except the name itself. You can repeat that word as many times as you like, but no sounds or gestures.</p>
-                <p><b>ROUND 3:</b> Just charades. No words. Sound effects are OK.</p>
-                <button v-on:click="startRound">START ROUND</button>
-            </div>
-
-            <div v-show="isRoundComplete">
-                <p><b>Round {{roundIndex + 1}} complete.</b></p>
-
-                <div v-show="roundIndex == 0">
-                    <p>Rules for the next round:</p>
-                    <p><b>ROUND 2:</b> Use only one word, which can be anything except the name itself. You can repeat that word as many times as you like, but no sounds or gestures.</p>
-                    <button v-on:click="startRound">START ROUND</button>
-                </div>
-                <div v-show="roundIndex == 1">
-                    <p>Rules for the next round:</p>
-                    <p><b>ROUND 3:</b> Just charades. No words. Sound effects are OK.</p>
-                    <button v-on:click="startRound">START ROUND</button>
-                </div>
-                <div v-show="roundIndex == 2">
-                    <p>GAME OVER</p>
-                </div>
-            </div>
 
             <div v-show="shouldGameDetailsBeVisible">
                 <b>You are the {{persona}}</b></br>
@@ -64,22 +43,22 @@ var app = new Vue({
     methods: {
         // If we have 13 cards and want 5, Create an array of 0-12, shuffle it and then take the first 5 elements
         pickRandomCards(noToPick, noOfCards) {
-            console.log('pickRandomCards()')
+            //console.log('pickRandomCards()')
             return _.slice(_.shuffle(Array(noOfCards).fill().map((_, i) => i)), 0, noToPick)
         },
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         startGame() {
-            console.log('startGame()')
+            //console.log('startGame()')
 
             // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
             this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, fullClueList.length - 1)
             this.gameState = 'started'
-            console.log('Game Started: ' + this.clueListInPlay)
+            //console.log('Game Started: ' + this.clueListInPlay)
         },
         // Take the first card from the selected list and show it to the clue-giver
         startRound() {
-            console.log('startRound()')
+            //console.log('startRound()')
             // Each time the round starts, we start over from the cards selected at the beginning
             this.clueListInPlay = [...this.clueListSelected]
             this.roundState = 'started'
@@ -88,12 +67,12 @@ var app = new Vue({
         },
         // Take the first card off the top of the In Play cards.
         drawClue() {
-            console.log('drawClue()')
+            //console.log('drawClue()')
             this.currentClueIndex = this.clueListInPlay.pop()
         },
         // Score points for that team (TBD) and draw a new card
         clueSuccess() {
-            console.log('clueSuccess()')
+            //console.log('clueSuccess()')
             this.scoredCardIndex[this.teamIndex][this.roundIndex].push(this.currentClueIndex)
             if (this.numberOfcardsLeftInPlay > 0) {
                 this.drawClue()
@@ -104,7 +83,7 @@ var app = new Vue({
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
         // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
         cluePass() {
-            console.log('cluePass()')
+            //console.log('cluePass()')
             this.clueListInPlay.unshift(this.currentClueIndex)
             this.drawClue()
             console.log('cluePass: ' + this.clueListInPlay)
@@ -113,8 +92,7 @@ var app = new Vue({
     },
     computed: {
         clue() {
-            console.log('clue()')
-            return this.currentClueIndex >= 0 ? this.fullClueList[this.currentClueIndex] : { name: '', description: ''}
+            return this.currentClueIndex >= 0 ? this.fullClueList[this.currentClueIndex] : {}
         },
         numberOfcardsLeftInPlay() {
             return this.clueListInPlay.length
@@ -150,6 +128,9 @@ var app = new Vue({
     mounted() {
         eventBus.$on('start-game', () => (
             this.startGame()
+        )),
+        eventBus.$on('start-round', () => (
+            this.startRound()
         )),
         eventBus.$on('clue-giver-success', clueIndex => (
             this.clueSuccess()
