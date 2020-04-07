@@ -2,33 +2,16 @@ var _ = require('lodash');
 var fullClueList = require('./clue-list.json');
 import Score from './components/Score'
 import ClueGiver from './components/ClueGiver'
+import Welcome from './components/Welcome'
 
 var eventBus = new Vue()
 
 var app = new Vue({
-    components: { Score, ClueGiver },
+    components: { Score, ClueGiver, Welcome },
     template: `
         <div >
             <score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></score>
-            <div v-show="isGameWaiting">
-                <p>Welcome to an online webapp version of Monikers, a dumb party game that respects you intelligence.</p>
-                <b>Rules:</b></br>
-                
-                <p>A person from the starting team has 60 seconds to get their team to guess as many names as possible from the deck by giving clues about the card's identity. There’s no limit to the number of guesses.</p>
-            
-                <p>Skipping is allowed and highly encouraged in all rounds.</p>
-              
-                <p>Teams keep the cards they guessed correctly for scoring. Skipped cards are reshuffled into the deck after each turn.</p>
-               
-                <p>Teams take turns giving clues. Each player should take a turn giving clues before any teammates repeat.</p>
-                
-                <p>A round ends when all cards from the deck have been guessed correctly. When that happens, teams add the point values from each card they correctly guessed.</p>
-                
-                <p>The team with the lowest score begins the next round.</p>
-
-                <p>For any questions, check out the <a href='https://s3.amazonaws.com/www.monikersgame.com/Press+kit/Monikers+PnP.pdf'>complete rules</a>.</p>
-                <button v-on:click="startGame">START GAME</button>
-            </div>
+            <welcome :eventBus="eventBus" :isGameWaiting="isGameWaiting" :fullClueList="fullClueList"></welcome>
 
             <div v-show="isRoundWaiting">
                 <p>Monikers has 3 rounds. Each has a restriction on how players are allowed to give clues:</p>
@@ -59,7 +42,7 @@ var app = new Vue({
             <div v-show="shouldGameDetailsBeVisible">
                 <b>You are the {{persona}}</b></br>
                 <b># of Cards left: {{numberOfcardsLeftInPlay + 1}}</b>
-                <clue-giver :eventBus="eventBus" :fullClueList="fullClueList" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
+                <clue-giver :clue="clue" :eventBus="eventBus" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></clue-giver>
             </div>
         </div>
     `,
@@ -129,6 +112,10 @@ var app = new Vue({
 
     },
     computed: {
+        clue() {
+            console.log('clue()')
+            return this.currentClueIndex >= 0 ? this.fullClueList[this.currentClueIndex] : { name: '', description: ''}
+        },
         numberOfcardsLeftInPlay() {
             return this.clueListInPlay.length
         },
@@ -161,6 +148,9 @@ var app = new Vue({
         },
     },
     mounted() {
+        eventBus.$on('start-game', () => (
+            this.startGame()
+        )),
         eventBus.$on('clue-giver-success', clueIndex => (
             this.clueSuccess()
         )),

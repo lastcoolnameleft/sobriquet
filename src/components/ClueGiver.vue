@@ -22,8 +22,8 @@
 <script>
 export default {
     props: {
-        clueIndex: {
-            type: Number,
+        clue: {
+            type: Object,
             required: true
         },
         gameState: {
@@ -34,20 +34,12 @@ export default {
             type: String,
             required: true
         },
-        fullClueList: {
-            type: Array,
-            required: true
-        },
         eventBus: {
             type: Object,
             required: true
         },
     },
     computed: {
-        clue() {
-            console.log('clue()')
-            return this.clueIndex >= 0 ? this.fullClueList[this.clueIndex] : { name: '', description: ''}
-        },
         isGameStarted() {
             return this.gameState === 'started'
         },
