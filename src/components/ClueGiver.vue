@@ -1,26 +1,16 @@
 <template>
     <div>
-        <div v-show="isRoundStarted">
-            <p>
-                Your clue is: <b>{{clue.name}}</b>
-            </p>
-            <p>
-                Description: {{clue.description}}
-            </p>
-            <p>
-                Points: {{clue.points}}
-            </p>
-            <p>
-                Category: {{clue.category}}
-            </p>
-            <button v-on:click="clueGiverSuccess">Success!</button> 
-            <button v-on:click="clueGiverPass">Pass</button> 
-        </div>
+        <clue v-show="isRoundStarted" :clue="clue"></clue>
+        <button v-on:click="clueGiverSuccess">Success!</button> 
+        <button v-on:click="clueGiverPass">Pass</button> 
     </div>
 </template>
 
 <script>
+import Clue from './Clue'
+
 export default {
+    components: { Clue },
     props: {
         clue: {
             type: Object,
