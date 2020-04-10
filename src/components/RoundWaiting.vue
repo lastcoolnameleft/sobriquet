@@ -16,7 +16,7 @@
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
             Team #1 Starts
           </h3>
-          <button v-on:click="startRound">START ROUND</button>
+          <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
         </div>
       </div>
 
