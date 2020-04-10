@@ -1,23 +1,33 @@
 <template>
-    <div>
-        <p>Welcome to an online webapp version of Monikers, a dumb party game that respects you intelligence.</p>
-        <b>Rules:</b>
-        <br>
-        
-        <p>A person from the starting team has 60 seconds to get their team to guess as many names as possible from the deck by giving clues about the card's identity. There’s no limit to the number of guesses.</p>
-
-        <p>Skipping is allowed and highly encouraged in all rounds.</p>
-        
-        <p>Teams keep the cards they guessed correctly for scoring. Skipped cards are reshuffled into the deck after each turn.</p>
-        
-        <p>Teams take turns giving clues. Each player should take a turn giving clues before any teammates repeat.</p>
-        
-        <p>A round ends when all cards from the deck have been guessed correctly. When that happens, teams add the point values from each card they correctly guessed.</p>
-        
-        <p>The team with the lowest score begins the next round.</p>
-
-        <p>For any questions, check out the <a href='https://s3.amazonaws.com/www.monikersgame.com/Press+kit/Monikers+PnP.pdf'>complete rules</a>.</p>
-        <button v-on:click="startGame">START GAME</button>
+      <div class="wrapper">
+        <img class="logo" src="../assets/Monikers_logo_lockup-02.svg" alt="Monikers logo" />
+        <h2 class="game-setup-headline">Game Setup</h2>
+          <h3 class="label-name">Team One</h3>
+          <input
+            autoComplete="off"
+            class="input-field"
+            type="text"
+            name="teamOne"
+            value="Team 1"
+          />
+          <h3 class="label-name">Team Two</h3>
+          <input
+            autoComplete="off"
+            class="input-field"
+            type="text"
+            name="teamTwo"
+            value="Team 2"
+          />
+          <h3 class="label-name">Number of Cards</h3>
+          <input
+            class="input-field"
+            type="number"
+            min="2"
+            max="10"
+            value="5"
+            name="numCards"
+          />
+          <button v-on:click="startGame" class="start-button" >START GAME</button>
     </div>
 
 </template>
@@ -39,3 +49,124 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.label-name {
+  color: #fff;
+  margin: 10px auto 5px auto;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.wrapper {
+  width: 75%;
+  margin: auto;
+  padding: 30px 0;
+}
+
+.input-field {
+  width: 100%;
+  margin: auto;
+  height: 40px;
+  font-size: 1rem;
+  color: #555;
+  border-radius: 5px;
+  border: 1px solid #FFF;
+  background-color: #fff;
+}
+
+input::placeholder {
+  font-size: 1rem;
+  text-indent: 10px;
+}
+
+input {
+  outline: none;
+  -webkit-appearance: none;
+  text-indent: 10px;
+}
+
+.start-button {
+  width: 100%;
+  height: 40px;
+  color: #FFF;
+  background-color: rgba(76, 189, 159, 1);
+  border: 1px solid #FFF;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 30px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  
+}
+
+.back-button {
+  width: 100%;
+  height: 40px;
+  color: #FFF;
+  background-color: rgba(134, 106, 173, 1);
+  border: 1px solid #FFF;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 10px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  
+}
+
+.logo {
+  width: 80%;
+  margin: 0 auto 20px auto;
+  display: block;
+}
+
+.game-setup-headline {
+  color: #FFF;
+  text-align: center;
+  margin: 20px;
+}
+
+@media (min-width: 360px) {
+  .logo {
+    margin: 30px auto 30px auto;
+  }
+
+  .label-name {
+    margin: 20px auto 5px auto;
+  }
+
+  .start-button {
+    margin-top: 40px;    
+  }
+}
+
+@media (min-width: 414px) {
+  .logo {
+    margin: 40px auto 40px auto;
+  }
+
+  .input-field {
+    height: 45px;
+  }
+  
+  .start-button {
+    height: 45px;
+  }
+  
+  .back-button {
+    height: 45px;
+  }
+}
+
+@media (min-width: 620px) {
+  .wrapper {
+    width: 400px;
+    margin: auto;
+    padding: 30px 0;
+  }
+
+
+}
+</style>

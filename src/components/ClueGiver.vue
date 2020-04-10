@@ -1,5 +1,7 @@
 <template>
     <div>
+        <p><b>You are the Clue Giver</b></p>
+        <p><b># of Cards left: {{numberOfcardsLeftInPlay + 1}}</b></p>
         <clue v-show="isRoundStarted" :clue="clue"></clue>
         <button v-on:click="clueGiverSuccess">Success!</button> 
         <button v-on:click="clueGiverPass">Pass</button> 
@@ -14,6 +16,10 @@ export default {
     props: {
         clue: {
             type: Object,
+            required: true
+        },
+        numberOfcardsLeftInPlay: {
+            type: Number,
             required: true
         },
         gameState: {

@@ -1,0 +1,379 @@
+<template>
+    <div class="background-furry">
+      <div class="splash-page">
+        <img
+          class="logo-lockup animated bounceIn"
+          src="../assets/Monikers_logo_lockup-02.svg"
+          alt="logolockup"
+        />
+        <div class="button-wrapper">
+          <button class="start-game-button navlink">
+            <router-link :to="{ name: 'game' }" class="navlink">NEW GAME</router-link>
+          </button>
+          <button class="instructions-button">
+            <router-link :to="{ name: 'instructions' }" class="navlink">INSTRUCTIONS</router-link>
+          </button>
+          <button class="buy-button">
+            <a class="navlink" href="http://www.monikersgame.com/">
+              BUY THE GAME
+            </a>
+          </button>
+        </div>
+      </div>
+    </div>
+</template>
+<script>
+import logolockup from '../assets/Monikers_logo_lockup-02.svg';
+
+export default {
+    data() {
+        return {
+            logolockup: logolockup
+        }
+    }
+}
+</script>
+<style scoped>
+.background-furry {
+  background-image: url('../assets/monikers_furry_one-01.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: right 50% bottom;
+  height: 100vh;
+}
+
+.splash-page {
+  background-image: url('../assets/monikers_furry_two-02-02.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: right 50% bottom;
+  height: 100vh;
+  animation: tiger 30s infinite;
+}
+
+@keyframes tiger {
+  0%   {
+    background-position: right 50% bottom;
+  }
+  25%  {
+    background-position: right 50% bottom;
+  }
+
+  50%  {
+    background-position: 50% 40%; 
+  }
+  100% {
+    background-position: right 50% bottom;
+  }
+}
+
+.button-wrapper {
+  width: 75%;
+  margin: auto;
+  padding: 0;
+}
+
+.logo-lockup {
+  display: block;
+  margin: auto;
+  padding: 60px 0 40px 0;
+  width: 65%;
+}
+
+.start-game-button {
+  width: 100%;
+  height: 40px;
+  color: #FFF;
+  background-color: rgba(76, 189, 159, 1);
+  border: 1px solid #FFF;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 25px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  
+}
+
+.instructions-button {
+  width: 100%;
+  height: 40px;
+  color: #FFF;
+  background-color: rgba(134, 106, 173, 1);
+  border: 1px solid #FFF;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 20px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  
+}
+
+.buy-button {
+  width: 100%;
+  height: 40px;
+  color: #FFF;
+  background-color: #00B4EF;;
+  border: 1px solid #FFF;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 20px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  
+}
+
+.navlink {
+  color: #FFF;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+}
+
+a {
+  width: 100%;
+}
+
+.animated.flip {
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+  -webkit-animation-name: flip;
+  animation-name: flip;
+}
+
+@-webkit-keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  40% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+
+  80% {
+    -webkit-transform: scale3d(0.97, 0.97, 0.97);
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  40% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+
+  80% {
+    -webkit-transform: scale3d(0.97, 0.97, 0.97);
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.bounceIn {
+  -webkit-animation-duration: 0.75s;
+  animation-duration: 0.75s;
+  -webkit-animation-name: bounceIn;
+  animation-name: bounceIn;
+}
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.animated.infinite {
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.animated.delay-1s {
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+.animated.delay-2s {
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+}
+
+.animated.delay-3s {
+  -webkit-animation-delay: 3s;
+  animation-delay: 3s;
+}
+
+.animated.delay-4s {
+  -webkit-animation-delay: 4s;
+  animation-delay: 4s;
+}
+
+.animated.delay-5s {
+  -webkit-animation-delay: 5s;
+  animation-delay: 5s;
+}
+
+.animated.fast {
+  -webkit-animation-duration: 800ms;
+  animation-duration: 800ms;
+}
+
+.animated.faster {
+  -webkit-animation-duration: 500ms;
+  animation-duration: 500ms;
+}
+
+.animated.slow {
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+}
+
+.animated.slower {
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+}
+
+@media (prefers-reduced-motion) {
+  .animated {
+    -webkit-animation: unset !important;
+    animation: unset !important;
+    -webkit-transition: none !important;
+    transition: none !important;
+  }
+}
+
+
+@media (min-width: 414px) {
+  .button-wrapper {
+    width: 70%;
+  }
+  
+  .start-game-button {
+    height: 45px;
+  }
+  
+  .instructions-button {
+    height: 45px;
+  }
+
+  .buy-button {
+    height: 45px;
+  }
+}
+
+@media (min-width: 620px) {
+  .button-wrapper {
+    width: 70%;
+    display: flex;
+    align-content: space-between;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .start-game-button {
+    width: 30%;
+    margin: 0;
+  }
+  
+  .instructions-button {
+    width: 30%;
+    margin: 0;
+  }
+
+  .buy-button {
+    width: 30%;
+    margin: 0;
+  }
+
+  .background-furry {
+    background-image: none;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: right 50% bottom;
+    height: 100vh;
+   
+  }
+  
+  .splash-page {
+    background-image: url('../assets/monikers_furry_two-02-02.svg');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: right 50% bottom;
+    height: 100vh;
+    animation: none;
+    width: 680px;
+    margin: auto;
+  }
+
+  .logo-lockup {
+    display: block;
+    margin: auto;
+    padding: 60px 0 40px 0;
+    width: 40%;
+  }
+}
+
+</style>

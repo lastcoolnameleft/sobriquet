@@ -2,13 +2,19 @@
   <head>
     <title>Moniker</title>
   </head>
-  <link rel="stylesheet" type="text/css" href="product-style.css">
 
 <body>
-  <div class="nav-bar"></div>
-  <div id="app"></div>
-  <div id="score"></div>
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <link rel="stylesheet" type="text/css" href="./index.css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600" rel="stylesheet">
+  
+  <div class="nav-bar"></div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+  <div id="score"></div>
+
   <script src="./index.js"></script>
 </body>
 </html>
