@@ -1,8 +1,8 @@
 <template>
     <div >
         <Score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></Score>
-        <GameWaiting v-show="isGameWaiting" :eventBus="eventBus" ></GameWaiting>
-        <RoundWaiting v-show="isRoundWaiting" :eventBus="eventBus" :roundIndex="roundIndex"></RoundWaiting>
+        <GameWaiting v-show="isGameWaiting" :eventBus="eventBus" :teamInfo="teamInfo" :team1Score="team1Score" :team2Score="team2Score"></GameWaiting>
+        <RoundWaiting v-show="isRoundWaiting" :eventBus="eventBus" :roundInfo="roundInfo"  :teamInfo="teamInfo" :team1Score="team1Score" :team2Score="team2Score"></RoundWaiting>
         <TurnWaiting v-show="isTurnWaiting" :eventBus="eventBus" :roundIndex="roundIndex"></TurnWaiting>
         <RoundComplete v-show="isRoundComplete" :eventBus="eventBus" :roundIndex="roundIndex" ></RoundComplete>
         <ClueGiver v-show="shouldGameDetailsBeVisible" :numberOfcardsLeftInPlay="numberOfcardsLeftInPlay" :clue="clue" :eventBus="eventBus" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></ClueGiver>
@@ -26,8 +26,23 @@ export default {
         return {
             eventBus,
             fullClueList,
+            teamInfo: {
+                names: ['Team 1', 'Team 2'],
+                currentTeamIndex: 0,
+            },
+            roundInfo: {
+                names: ['Round One', 'Round Two', 'Round Three'],
+                descriptions: [
+                    'Describe the name using any words, sounds, or gestures except the name itself',
+                    'Describe the name using only one word, which can be anything except the name itself',
+                    'Describe the name using just charades. No words. Sound effects are OK'
+                ],
+                // -1: Not ready yet.  0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
+                currentRoundIndex: -1,
+            },
             persona: 'clue-giver',
             currentClueIndex: -1,
+            currentTeamIndex: 0,
             maxSelectedCards: 5,
             clueListSelected: [], // cards selected at the beginning of the game
             clueListInPlay: [], // starts with same list as clueListSelected, but call pop() each time clue-giver draws cards
@@ -55,6 +70,7 @@ export default {
             // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
             this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, this.fullClueList.length - 1)
             this.gameState = 'started'
+            this.roundInfo.currentRoundIndex += 1
             //console.log('Game Started: ' + this.clueListInPlay)
         },
         // Take the first card from the selected list and show it to the clue-giver
@@ -64,7 +80,6 @@ export default {
             this.clueListInPlay = [...this.clueListSelected]
             this.roundState = 'started'
             this.turnState = 'waiting'
-            this.roundIndex += 1
         },
         startTurn() {
             //console.log('startTurn()')
@@ -80,7 +95,7 @@ export default {
         // Add the index of the card to the "scoredCardIndex"
         clueSuccess() {
             //console.log('clueSuccess()')
-            this.scoredCardIndex[this.teamIndex][this.roundIndex].push(this.currentClueIndex)
+            this.scoredCardIndex[this.teamIndex][this.roundInfo.currentRoundIndex].push(this.currentClueIndex)
             if (this.numberOfcardsLeftInPlay > 0) {
                 this.drawClue()
             } else {
