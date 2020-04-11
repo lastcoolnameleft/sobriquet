@@ -12,16 +12,15 @@
 var fullClueList = require('../clue-list.json');
 var eventBus = new Vue()
 var _ = require('lodash');
-import Score from './Score'
+import Vue from 'vue'
 import ClueGiver from './ClueGiver'
 import GameWaiting from './GameWaiting'
 import RoundWaiting from './RoundWaiting'
-import TurnWaiting from './TurnWaiting'
 import RoundComplete from './RoundComplete'
 import GameComplete from './GameComplete'
 
 export default {
-    components: { Score, ClueGiver, GameWaiting, RoundWaiting, TurnWaiting, RoundComplete, GameComplete },
+    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete },
     data() {
         return {
             eventBus,
@@ -78,6 +77,8 @@ export default {
             this.turnState = 'waiting'
             this.currentClueIndex = -1
             this.scoredCardIndex = [[ [], [], [], ], [ [], [], [], ]] 
+            this.teamInfo.currentTeamIndex = 0
+            this.roundInfo.currentRoundIndex = 0
 
             this.startGame()
         },
@@ -192,10 +193,10 @@ export default {
         this.eventBus.$on('start-turn', () => (
             this.startTurn()
         )),
-        this.eventBus.$on('clue-giver-success', clueIndex => (
+        this.eventBus.$on('clue-giver-success', () => (
             this.clueSuccess()
         )),
-        this.eventBus.$on('clue-giver-pass', clueIndex => (
+        this.eventBus.$on('clue-giver-pass', () => (
             this.cluePass()
         ))
     }

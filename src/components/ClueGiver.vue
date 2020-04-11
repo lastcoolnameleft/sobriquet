@@ -67,7 +67,7 @@ export default {
             return this.roundState === 'started'
         },
         currentTeamName() {
-            return roundInfo.names[roundInfo.currentRoundIndex]
+            return this.roundInfo.names[this.roundInfo.currentRoundIndex]
         }
     },
     methods: {
