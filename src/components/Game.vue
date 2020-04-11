@@ -70,6 +70,17 @@ export default {
             this.gameState = 'started'
             //console.log('Game Started: ' + this.clueListInPlay)
         },
+        // To restart the game, reset some values and then start the game
+        restartGame() {
+            //console.log('restartGame()')
+            this.gameState = 'waiting'
+            this.roundState = 'waiting'
+            this.turnState = 'waiting'
+            this.currentClueIndex = -1
+            this.scoredCardIndex = [[ [], [], [], ], [ [], [], [], ]] 
+
+            this.startGame()
+        },
         endGame() {
             console.log('endGame()')
             this.gameState = 'complete'
@@ -171,6 +182,9 @@ export default {
     mounted() {
         this.eventBus.$on('start-game', () => (
             this.startGame()
+        )),
+        this.eventBus.$on('restart-game', () => (
+            this.restartGame()
         )),
         this.eventBus.$on('start-round', () => (
             this.startRound()
