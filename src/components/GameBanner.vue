@@ -1,59 +1,13 @@
 <template>
-      <div class="background-monikers">
         <div class="flex">
           <h5 class="scores blue">
-            Team #1 : {{team1Score}}
+            Team 1 : {{team1Score}}
           </h5>
           <h5 class="scores purple">
-            Team #2 : {{team2Score}}
+            Team 2 : {{team2Score}}
           </h5>
         </div>
-        <div class="round-transition">
-          <h2 class="round-headline">{{roundInfo.names[roundInfo.currentRoundIndex]}} complete</h2>
-          <div class="dashed-line" />
-          <p class="round-description">{{roundInfo.descriptions[roundInfo.currentRoundIndex]}}</p>
-          <div class="dashed-line" />
-          <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Team #1 Starts
-          </h3>
-          <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Player #1 Starts
-          </h3>
-          <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
-        </div>
-      </div>
 </template>
-
-<script>
-export default {
-    props: {
-        eventBus: {
-            type: Object,
-            required: true
-        },
-        roundInfo: {
-            type: Object,
-            required: true
-        },
-        team1Score: {
-            type: Number,
-            required: true
-        },
-        team2Score: {
-            type: Number,
-            required: true
-        },
-    },
-    methods: {
-        // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
-        // The Selected cards are now "In Play".
-        startRound() {
-            this.eventBus.$emit('start-round')
-        },
-    }
-}
-</script>
-
 
 <style scoped>
 .round-transition {
@@ -69,7 +23,7 @@ export default {
 }
 
 .background-monikers {
-  background-image: url('../assets/seamlessbg-03.svg');
+  background-image: url('../../assets/seamlessbg-03.svg');
   background-repeat: repeat;
   width: 100%;
   height: 100vh;

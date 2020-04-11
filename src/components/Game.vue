@@ -1,11 +1,10 @@
 <template>
-    <div >
-        <Score :isGameStarted="isGameStarted" :team1Score="team1Score" :team2Score="team2Score"></Score>
+    <div>
         <GameWaiting v-show="isGameWaiting" :eventBus="eventBus" :teamInfo="teamInfo" :team1Score="team1Score" :team2Score="team2Score"></GameWaiting>
         <RoundWaiting v-show="isRoundWaiting" :eventBus="eventBus" :roundInfo="roundInfo"  :teamInfo="teamInfo" :team1Score="team1Score" :team2Score="team2Score"></RoundWaiting>
-        <TurnWaiting v-show="isTurnWaiting" :eventBus="eventBus" :roundIndex="roundIndex"></TurnWaiting>
-        <RoundComplete v-show="isRoundComplete" :eventBus="eventBus" :roundIndex="roundIndex" ></RoundComplete>
-        <ClueGiver v-show="shouldGameDetailsBeVisible" :numberOfcardsLeftInPlay="numberOfcardsLeftInPlay" :clue="clue" :eventBus="eventBus" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></ClueGiver>
+        <RoundComplete v-show="isRoundComplete" :eventBus="eventBus" :roundInfo="roundInfo" :team1Score="team1Score" :team2Score="team2Score"></RoundComplete>
+        <GameComplete v-show="isGameComplete" :eventBus="eventBus" :roundInfo="roundInfo" :team1Score="team1Score" :team2Score="team2Score"  :teamInfo="teamInfo" ></GameComplete>
+        <ClueGiver v-show="shouldGameDetailsBeVisible" :numberOfcardsLeftInPlay="numberOfcardsLeftInPlay" :roundInfo="roundInfo" :clue="clue" :eventBus="eventBus" :clueIndex="currentClueIndex" :gameState="gameState" :roundState="roundState"></ClueGiver>
     </div>
 </template>
 
@@ -19,15 +18,17 @@ import GameWaiting from './GameWaiting'
 import RoundWaiting from './RoundWaiting'
 import TurnWaiting from './TurnWaiting'
 import RoundComplete from './RoundComplete'
+import GameComplete from './GameComplete'
 
 export default {
-    components: { Score, ClueGiver, GameWaiting, RoundWaiting, TurnWaiting, RoundComplete },
+    components: { Score, ClueGiver, GameWaiting, RoundWaiting, TurnWaiting, RoundComplete, GameComplete },
     data() {
         return {
             eventBus,
             fullClueList,
             teamInfo: {
                 names: ['Team 1', 'Team 2'],
+                // zero-indexed, so really Team 0 and Team 1, but we should display it as Team 1 and Team 2
                 currentTeamIndex: 0,
             },
             roundInfo: {
@@ -37,22 +38,19 @@ export default {
                     'Describe the name using only one word, which can be anything except the name itself',
                     'Describe the name using just charades. No words. Sound effects are OK'
                 ],
-                // -1: Not ready yet.  0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
-                currentRoundIndex: -1,
+                // 0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
+                currentRoundIndex: 0,
             },
             persona: 'clue-giver',
             currentClueIndex: -1,
-            currentTeamIndex: 0,
             maxSelectedCards: 5,
             clueListSelected: [], // cards selected at the beginning of the game
             clueListInPlay: [], // starts with same list as clueListSelected, but call pop() each time clue-giver draws cards
             gameState: 'waiting',
             roundState: 'waiting',
             turnState: 'waiting',
-            roundIndex: -1, // -1: Not ready yet.  0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
-            teamIndex: 0, // zero-indexed, so really Team 0 and Team 1, but we should display it as Team 1 and Team 2
             // 2 teams, 3 rounds, keep the index of each card that the team scores
-            // Looks like this:  scoredCardIndex[teamIndex][roundIndex][List of card indexes successfully scored]
+            // Looks like this:  scoredCardIndex[teamInfo.currentTeamIndex][roundInfo.currentRoundIndex][List of card indexes successfully scored]
             scoredCardIndex: [[ [], [], [], ], [ [], [], [], ]] 
         }
     },
@@ -70,8 +68,11 @@ export default {
             // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
             this.clueListSelected = this.pickRandomCards(this.maxSelectedCards, this.fullClueList.length - 1)
             this.gameState = 'started'
-            this.roundInfo.currentRoundIndex += 1
             //console.log('Game Started: ' + this.clueListInPlay)
+        },
+        endGame() {
+            console.log('endGame()')
+            this.gameState = 'complete'
         },
         // Take the first card from the selected list and show it to the clue-giver
         startRound() {
@@ -79,8 +80,18 @@ export default {
             // Each time the round starts, we start over from the cards selected at the beginning
             this.clueListInPlay = [...this.clueListSelected]
             this.roundState = 'started'
-            this.turnState = 'waiting'
+            this.startTurn()
         },
+        endRound() {
+            console.log('endRound()')
+            this.roundState = 'complete'
+            this.turnState = 'complete'
+            this.roundInfo.currentRoundIndex += 1
+            if (this.roundInfo.currentRoundIndex > 2) {
+                this.endGame()
+            }
+        },
+
         startTurn() {
             //console.log('startTurn()')
             this.turnState = 'started'
@@ -95,12 +106,11 @@ export default {
         // Add the index of the card to the "scoredCardIndex"
         clueSuccess() {
             //console.log('clueSuccess()')
-            this.scoredCardIndex[this.teamIndex][this.roundInfo.currentRoundIndex].push(this.currentClueIndex)
+            this.scoredCardIndex[this.teamInfo.currentTeamIndex][this.roundInfo.currentRoundIndex].push(this.currentClueIndex)
             if (this.numberOfcardsLeftInPlay > 0) {
                 this.drawClue()
             } else {
-                this.roundState = 'complete'
-                this.turnState = 'complete'
+                this.endRound()
             }
         },
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
@@ -134,6 +144,9 @@ export default {
         },
         isRoundComplete() {
             return this.gameState === 'started' && this.roundState === 'complete'
+        },
+        isGameComplete() {
+            return this.gameState === 'complete'
         },
         shouldGameDetailsBeVisible() {
             return this.gameState === 'started' && this.roundState === 'started' && this.turnState === 'started'
