@@ -41,14 +41,6 @@ export default {
             type: Number,
             required: true
         },
-        gameState: {
-            type: String,
-            required: true
-        },
-        roundState: {
-            type: String,
-            required: true
-        },
         eventBus: {
             type: Object,
             required: true
@@ -57,14 +49,17 @@ export default {
             type: Object,
             required: true
         },
+        gameData: {
+            type: Object,
+            required: true
+        },
     },
     computed: {
         isGameStarted() {
-            return this.gameState === 'started'
+            return this.gameData.state.game === 'started'
         },
         isRoundStarted() {
-            console.log('roundStarted()')
-            return this.roundState === 'started'
+            return this.gameData.state.round === 'started'
         },
         currentTeamName() {
             return this.roundInfo.names[this.roundInfo.currentRoundIndex]

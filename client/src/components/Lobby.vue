@@ -1,90 +1,54 @@
 <template>
       <div class="wrapper">
         <img class="logo" src="../assets/Monikers_logo_lockup-02.svg" alt="Monikers logo" />
-        <h2 class="game-setup-headline">Join Game</h2>
-          <h3 class="label-name">Game Code</h3>
-          <input v-model='roomName'
-            class="input-field"
-            type="text"
-            name="roomName"
-            value=""
-          />
-          <h3 class="label-name">Your Nickname</h3>
-          <input v-model='nicknameJoin'
-            class="input-field"
-            type="text"
-            name="nickname"
-            value="tommy"
-          />
-          <button v-on:click="joinGame" class="start-button" >JOIN GAME</button>
-        <h2 class="game-setup-headline">Create Game</h2>
-          <h3 class="label-name">Team One (Your Team)</h3>
-          <input v-model='createGameData.team1Name'
-            autoComplete="off"
-            class="input-field"
-            type="text"
-            name="teamOne"
-            value="Team 1"
-          />
-          <h3 class="label-name">Team Two</h3>
-          <input v-model='createGameData.team2Name'
-            autoComplete="off"
-            class="input-field"
-            type="text"
-            name="teamTwo"
-            value="Team 2"
-          />
-          <h3 class="label-name">Number of Cards</h3>
-          <input v-model='createGameData.numCards'
-            class="input-field"
-            type="number"
-            min="2"
-            max="10"
-            value="5"
-            name="numCards"
-          />
-          <h3 class="label-name">Your Nickname</h3>
-          <input v-model='nicknameCreate'
-            class="input-field"
-            type="text"
-            name="nickname"
-            value="tommy"
-          />
-          <button v-on:click="createGame" class="start-button" >CREATE GAME</button>
+        <h2 class="game-setup-headline">Welcome to the Lobby</h2>
+        <h2 class="game-setup-headline">Tell your friends to join with the code: <b>{{gameData.roomName}}</b></h2>
+        <h3 class="label-name">{{ gameData.teamData.names[0] }} Members:</h3>
+        {{ team1Members }} 
+        <h3 class="label-name">{{ gameData.teamData.names[1] }} Members:</h3>
+        {{ team2Members }} 
+       <button v-show="isHost" v-on:click="startGame" class="start-button" >START GAME</button>
     </div>
-
 </template>
 
 <script>
 export default {
+    name: 'Lobby',
     props: {
         eventBus: {
             type: Object,
             required: true
         },
+        gameData: {
+            type: Object,
+            required: true
+        },
+        isHost: {
+            type: Boolean,
+            required: true
+        },
     },
     data() {
       return {
-        nicknameJoin: 'tommy2',
-        nicknameCreate: 'tommy',
-        roomName: '',
-        createGameData: {
-          team1Name: 'Team 1',
-          team2Name: 'Team 2',
-          numCards: 5,
-        }
-      }
+        myName: '',
+      };
+    },
+    computed: {
+      team1Members() {
+        return this.gameData.teamData.members[0].join('</br>')
+      },
+      team2Members() {
+        return this.gameData.teamData.members[1].join('</br>')
+      },
     },
     methods: {
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
-        joinGame() {
-          console.log('joinGame()')
-            this.eventBus.$emit('join-game', this.roomName, this.nicknameJoin)
+        startGame() {
+            this.eventBus.$emit('start-game')
         },
-        createGame() {
-          console.log('createGame()')
-          this.eventBus.$emit('create-game', this.createGameData, this.nicknameCreate)
+        setName() {
+            this.eventBus.$emit('set-name')
         },
     }
 }

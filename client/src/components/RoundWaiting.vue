@@ -14,10 +14,10 @@
           <p class="round-description">{{roundInfo.descriptions[roundInfo.currentRoundIndex]}}</p>
           <div class="dashed-line" />
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Team #1 Starts
+            {{gameData.teamData.names[gameData.state.activeTeamIndex]}} Starts
           </h3>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Player #1 Starts
+            {{gameData.teamData.members[gameData.state.activePlayerIndex]}} Starts
           </h3>
           <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
         </div>
@@ -40,7 +40,7 @@ export default {
             type: Number,
             required: true
         },
-        teamInfo: {
+        gameData: {
             type: Object,
             required: true
         },
@@ -55,6 +55,11 @@ export default {
         startRound() {
             this.eventBus.$emit('start-round')
         },
+    },
+    computed: {
+        teamData() {
+            return this.gameData.teamData
+        },      
     }
 }
 </script>

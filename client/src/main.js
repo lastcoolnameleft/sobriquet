@@ -1,7 +1,16 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import Game from './components/Game.vue'
+import VueSocketIO from 'vue-socket.io'
 
 Vue.config.productionTip = false
+
+Vue.use(Vuex)
+
+Vue.use(new VueSocketIO({
+  debug: false,
+  connection: 'http://localhost:3000',
+}))
 
 new Vue({
   render: h => h(Game),
