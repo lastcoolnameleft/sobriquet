@@ -9,12 +9,12 @@
           </h5>
         </div>
         <div class="round-transition">
-          <h2 class="round-headline">{{roundInfo.names[roundInfo.currentRoundIndex]}} complete</h2>
-          <div class="dashed-line" />
-          <p class="round-description">{{roundInfo.descriptions[roundInfo.currentRoundIndex]}}</p>
-          <div class="dashed-line" />
+          <h2 class="round-headline">{{activeRoundName}} complete</h2>
+          <div class="dashed-line" ></div>
+          <p class="round-description">{{activeRoundDescription}}</p>
+          <div class="dashed-line" ></div>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Team #1 Starts
+            {{activeTeamName}} Starts
           </h3>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
             Player #1 Starts
@@ -25,22 +25,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     props: {
         eventBus: {
             type: Object,
-            required: true
-        },
-        roundInfo: {
-            type: Object,
-            required: true
-        },
-        team1Score: {
-            type: Number,
-            required: true
-        },
-        team2Score: {
-            type: Number,
             required: true
         },
     },
@@ -50,7 +40,12 @@ export default {
         startRound() {
             this.eventBus.$emit('start-round')
         },
-    }
+    },
+    computed: {
+      ...mapGetters([
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+      ]),
+    },
 }
 </script>
 

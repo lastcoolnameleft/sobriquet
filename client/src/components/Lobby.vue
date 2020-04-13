@@ -2,24 +2,22 @@
       <div class="wrapper">
         <img class="logo" src="../assets/Monikers_logo_lockup-02.svg" alt="Monikers logo" />
         <h2 class="game-setup-headline">Welcome to the Lobby</h2>
-        <h2 class="game-setup-headline">Tell your friends to join with the code: <b>{{gameData.roomName}}</b></h2>
-        <h3 class="label-name">{{ gameData.teamData.names[0] }} Members:</h3>
+        <h2 class="game-setup-headline">Tell your friends to join with the code: <b>{{ $store.state.roomName}}</b></h2>
+        <h3 class="label-name">{{ team1Name }} Members:</h3>
         {{ team1Members }} 
-        <h3 class="label-name">{{ gameData.teamData.names[1] }} Members:</h3>
+        <h3 class="label-name">{{ team2Name }} Members:</h3>
         {{ team2Members }} 
        <button v-show="isHost" v-on:click="startGame" class="start-button" >START GAME</button>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'Lobby',
     props: {
         eventBus: {
-            type: Object,
-            required: true
-        },
-        gameData: {
             type: Object,
             required: true
         },
@@ -28,17 +26,15 @@ export default {
             required: true
         },
     },
-    data() {
-      return {
-        myName: '',
-      };
-    },
     computed: {
-      team1Members() {
-        return this.gameData.teamData.members[0].join('</br>')
+      ...mapGetters([
+          'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name'
+      ]),
+      team1MemberString() {
+        return this.team1Members.join('</br>')
       },
-      team2Members() {
-        return this.gameData.teamData.members[1].join('</br>')
+      team2MemberString() {
+        return this.team2Members.join('</br>')
       },
     },
     methods: {

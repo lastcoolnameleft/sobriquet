@@ -8,7 +8,7 @@ var createNewGameData = function(roomName, createGameData, nickname) {
   return {
     roomName,
     host: nickname,
-    teamData: {
+    teams: {
         names: [createGameData.team1Name, createGameData.team2Name],
         // zero-indexed, so really Team 0 and Team 1, but we should display it as Team 1 and Team 2
         members: [ [nickname], [] ],
@@ -75,7 +75,7 @@ var game = function(io) {
             console.log('startGame');
 
             // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
-            roomData[roomName].cardData.cardListSelected = pickRandomCards(roomData[roomName].cardData.maxSelectedCards, fullClueList.length - 1)
+            roomData[roomName].cards.cardListSelected = pickRandomCards(roomData[roomName].cards.maxSelectedCards, fullClueList.length - 1)
             roomData[roomName].state.game = 'started'
 
             console.log(roomData[roomName]);

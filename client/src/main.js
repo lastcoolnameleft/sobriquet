@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Game from './components/Game.vue'
+import store from './store/index'
 import VueSocketIO from 'vue-socket.io'
 
 Vue.config.productionTip = false
@@ -13,6 +14,7 @@ Vue.use(new VueSocketIO({
 }))
 
 new Vue({
+  store,
   render: h => h(Game),
 }).$mount('#app')
 

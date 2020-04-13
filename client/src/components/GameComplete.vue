@@ -18,21 +18,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     props: {
         eventBus: {
-            type: Object,
-            required: true
-        },
-        team1Score: {
-            type: Number,
-            required: true
-        },
-        team2Score: {
-            type: Number,
-            required: true
-        },
-        teamInfo: {
             type: Object,
             required: true
         },
@@ -45,6 +35,9 @@ export default {
         },
     },
     computed: {
+        ...mapGetters([
+          'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+        ]),
         winner() {
             if (this.team1Score > this.team2Score) {
               return this.teamInfo.names[0] + " WINS!"
@@ -53,7 +46,7 @@ export default {
             } else {
               return "IT'S A TIE!"
             }
-        }
+        },
     }
 }
 </script>

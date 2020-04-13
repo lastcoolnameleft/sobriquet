@@ -9,15 +9,15 @@
           </h5>
         </div>
         <div class="round-transition">
-          <h2 class="round-headline"> {{roundInfo.names[roundInfo.currentRoundIndex]}}</h2>
+          <h2 class="round-headline"> {{activeRoundName}}</h2>
           <div class="dashed-line" />
-          <p class="round-description">{{roundInfo.descriptions[roundInfo.currentRoundIndex]}}</p>
+          <p class="round-description">{{activeRoundDescription}}</p>
           <div class="dashed-line" />
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            {{gameData.teamData.names[gameData.state.activeTeamIndex]}} Starts
+            {{activeTeamName}} Starts
           </h3>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            {{gameData.teamData.members[gameData.state.activePlayerIndex]}} Starts
+            {{activeTeamMembers}} Starts
           </h3>
           <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
         </div>
@@ -26,25 +26,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     props: {
         eventBus: {
-            type: Object,
-            required: true
-        },
-        team1Score: {
-            type: Number,
-            required: true
-        },
-        team2Score: {
-            type: Number,
-            required: true
-        },
-        gameData: {
-            type: Object,
-            required: true
-        },
-        roundInfo: {
             type: Object,
             required: true
         },
@@ -57,10 +43,10 @@ export default {
         },
     },
     computed: {
-        teamData() {
-            return this.gameData.teamData
-        },      
-    }
+      ...mapGetters([
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+      ]),
+    },
 }
 </script>
 

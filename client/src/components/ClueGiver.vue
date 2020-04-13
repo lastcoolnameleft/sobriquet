@@ -3,14 +3,14 @@
           <div class="play">
             <div class="game-info-container">
               <h3 class="current-team" >
-                TEAM #1
+                {{ activeTeamName }}
               </h3>
               <h3 class="current-round">
-                {{roundInfo.names[roundInfo.currentRoundIndex]}}
+                {{ activeRoundName }}
               </h3>
             </div>
             <div class="timer" ></div>
-            <clue v-show="isRoundStarted" :clue="clue"></clue>
+            <clue v-show="isRoundStarted"></clue>
             <div class="buttons-container">
               <button
                 class="pass-button ripple-pass"
@@ -28,42 +28,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Clue from './Clue'
 
 export default {
     components: { Clue },
     props: {
-        clue: {
-            type: Object,
-            required: true
-        },
-        numberOfcardsLeftInPlay: {
-            type: Number,
-            required: true
-        },
         eventBus: {
-            type: Object,
-            required: true
-        },
-        roundInfo: {
-            type: Object,
-            required: true
-        },
-        gameData: {
             type: Object,
             required: true
         },
     },
     computed: {
-        isGameStarted() {
-            return this.gameData.state.game === 'started'
-        },
-        isRoundStarted() {
-            return this.gameData.state.round === 'started'
-        },
-        currentTeamName() {
-            return this.roundInfo.names[this.roundInfo.currentRoundIndex]
-        }
+      ...mapGetters([
+        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+      ]),
     },
     methods: {
         clueGiverTimeout() {

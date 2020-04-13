@@ -1,27 +1,26 @@
 <template>
       <div class="card-container animated slideInRight">
-        <h1 class="card-title">{{clue.name}}</h1>
-        <p class="description">{{clue.description}}</p>
+        <h1 class="card-title">{{activeCard.name}}</h1>
+        <p class="description">{{activeCard.description}}</p>
         <div class="dashed-line" ></div>
         <h3 class="category" style="color: rgb(0, 180, 239);">
-          {{clue.category}}
+          {{activeCard.category}}
         </h3>
         <div class="circle" style="background-color: rgb(0, 180, 239);">
-          <h1 class="points">{{clue.points}}</h1>
+          <h1 class="points">{{activeCard.points}}</h1>
         </div>
       </div>
 
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-    props: {
-        clue: {
-            type: Object,
-            required: true
-        },
-    },
     computed: {
+        ...mapGetters([
+          'activeCard'
+        ]),
         categoryColor() {
             return { color: 'rgba(76, 189, 159, 1)' }
         },
