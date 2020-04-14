@@ -13,28 +13,34 @@ var store = new Vuex.Store({
   state: {
       roomName: '',
       host: '',
+      
       teamNames: ['', ''],
       // zero-indexed, so really Team 0 and Team 1, but we should display it as Team 1 and Team 2
       teamMembers: [ [], [] ],
-      activeTeamIndex: 0,
+      
       gameState: 'waiting',
       roundState: 'waiting',
       turnState: 'waiting',
+      
+      // 0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
+      activeRoundIndex: 0,
+      activePlayerIndex: 0,
+      activeTeamIndex: 0,
       activeCardIndex: -1,
+      
       maxSelectedCards: 5,
       cardListSelected: [], // cards selected at the beginning of the game
       cardListInPlay: [], // starts with same list as clueListSelected, but call pop() each time clue-giver draws cards
       // 2 teams, 3 rounds, keep the index of each card that the team scores
       // Looks like this:  scoredCardIndex[teamInfo.currentTeamIndex][roundInfo.currentRoundIndex][List of card indexes successfully scored]
       scoredCardIndex: [[ [], [], [], ], [ [], [], [], ]] ,
+      
       roundNames: ['Round One', 'Round Two', 'Round Three'],
       roundDescriptions: [
           'Describe the name using any words, sounds, or gestures except the name itself',
           'Describe the name using only one word, which can be anything except the name itself',
           'Describe the name using just charades. No words. Sound effects are OK'
       ],
-      // 0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
-      activeRoundIndex: 0,
     },
     mutations: {
       createGame(state, payload) {
@@ -52,6 +58,13 @@ var store = new Vuex.Store({
         var randomCards = _.slice(_.shuffle(Array(state.maxSelectedCards).fill().map((_, i) => i)), 0, fullClueList.length - 1)
         state.cardListSelected = randomCards
         state.gameState = 'started'
+      },
+      // TODO:  Write a test for this.  
+      nextPlayer(state) {
+        state.activePlayerIndex++
+        if (state.activePlayerIndex >= state.teamMembers[state.activeTeamIndex].length ) {
+            state.activePlayerIndex = 0
+        }
       }
     },
     getters: {
@@ -60,6 +73,9 @@ var store = new Vuex.Store({
       },
       roomName: state => {
           return state.roomName
+      },
+      getActivePlayerName(state) {
+        return state.teamMembers[state.activeTeamIndex][state.activePlayerIndex]
       },
       isGameStarted: state => {
           return state.gameState === 'started'

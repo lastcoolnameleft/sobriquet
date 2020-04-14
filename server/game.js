@@ -6,11 +6,12 @@ var roomData = {};
 
 
 var addTeamMember = function(teamMembers, nickname) {
+  var teamIndex = 0
   if (teamMembers[0].length > teamMembers[1].length) {
-    teamMembers[1].push(nickname)
-  } else {
-    teamMembers[0].push(nickname)
+    teamIndex = 1
   }
+  teamMembers[teamIndex].push(nickname)
+  return teamIndex
 }
 
 // If we have 13 cards and want 5, Create an array of 0-12, shuffle it and then take the first 5 elements
@@ -42,9 +43,10 @@ var game = function(io) {
         socket.on('joinGame', function(roomName, nickname) {
             console.log('joinGame');
             console.log(roomData[roomName]);
-            addTeamMember(roomData[roomName].teamMembers, nickname)
+            var teamIndex = addTeamMember(roomData[roomName].teamMembers, nickname)
             socket.join(roomName);
             console.log(roomData[roomName]);
+            io.emit('teamAssignment', teamIndex);
             io.to(roomName).emit('gameData', roomData[roomName]);
         })
 
