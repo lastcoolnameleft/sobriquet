@@ -4,9 +4,9 @@
         <h2 class="game-setup-headline">Welcome to the Lobby</h2>
         <h2 class="game-setup-headline">Tell your friends to join with the code: <b>{{ $store.state.roomName}}</b></h2>
         <h3 class="label-name">{{ team1Name }} Members:</h3>
-        {{ team1Members }} 
+        {{ team1MemberString }} 
         <h3 class="label-name">{{ team2Name }} Members:</h3>
-        {{ team2Members }} 
+        {{ team2MemberString }} 
        <button v-show="isHost" v-on:click="startGame" class="start-button" >START GAME</button>
     </div>
 </template>
@@ -31,9 +31,11 @@ export default {
           'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name'
       ]),
       team1MemberString() {
+        console.log('team1memberstring')
         return this.team1Members.join('</br>')
       },
       team2MemberString() {
+        console.log('team2memberstring')
         return this.team2Members.join('</br>')
       },
     },

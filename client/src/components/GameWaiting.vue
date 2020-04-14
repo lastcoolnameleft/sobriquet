@@ -16,10 +16,10 @@
             name="nickname"
             value="tommy"
           />
-          <button v-on:click="joinGame" class="start-button" >JOIN GAME</button>
+          <button v-on:click="clickedJoinGame" class="start-button" >JOIN GAME</button>
         <h2 class="game-setup-headline">Create Game</h2>
           <h3 class="label-name">Team One (Your Team)</h3>
-          <input v-model='createGameData.team1Name'
+          <input v-model='team1Name'
             autoComplete="off"
             class="input-field"
             type="text"
@@ -27,7 +27,7 @@
             value="Team 1"
           />
           <h3 class="label-name">Team Two</h3>
-          <input v-model='createGameData.team2Name'
+          <input v-model='team2Name'
             autoComplete="off"
             class="input-field"
             type="text"
@@ -35,7 +35,7 @@
             value="Team 2"
           />
           <h3 class="label-name">Number of Cards</h3>
-          <input v-model='createGameData.numCards'
+          <input v-model='numCards'
             class="input-field"
             type="number"
             min="2"
@@ -50,12 +50,13 @@
             name="nickname"
             value="tommy"
           />
-          <button v-on:click="createGame" class="start-button" >CREATE GAME</button>
+          <button v-on:click="clickedCreateGame" class="start-button" >CREATE GAME</button>
     </div>
 
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 export default {
     props: {
         eventBus: {
@@ -68,25 +69,34 @@ export default {
         nicknameJoin: 'tommy2',
         nicknameCreate: 'tommy',
         roomName: '',
-        createGameData: {
-          team1Name: 'Team 1',
-          team2Name: 'Team 2',
-          numCards: 5,
-        }
+        team1Name: 'Team 1',
+        team2Name: 'Team 2',
+        numCards: 5,
       }
     },
     methods: {
+        ...mapMutations([ 'createGame' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
-        joinGame() {
-          console.log('joinGame()')
+        clickedJoinGame() {
+          console.log('GameWaiting.joinGame()')
             this.eventBus.$emit('join-game', this.roomName, this.nicknameJoin)
         },
-        createGame() {
-          console.log('createGame()')
-          this.eventBus.$emit('create-game', this.createGameData, this.nicknameCreate)
+        clickedCreateGame() {
+          console.log('GameWaiting.createGame()')
+          this.eventBus.$emit('set-nickname', this.nicknameCreate)
+          this.createGame({ 
+              team1Name: this.team1Name,
+              team2Name: this.team2Name,
+              numCards: this.numCards,
+              nickname: this.nicknameCreate })
+          console.log(this.getState)
+          this.$socket.emit("createGame", this.getState);
         },
-    }
+    },
+    computed: {
+      ...mapGetters([ 'getState' ]),
+    },
 }
 </script>
 

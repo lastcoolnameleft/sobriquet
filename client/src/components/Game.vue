@@ -19,13 +19,16 @@ import RoundWaiting from './RoundWaiting'
 import RoundComplete from './RoundComplete'
 import GameComplete from './GameComplete'
 import Lobby from './Lobby'
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
     components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, Lobby },
     sockets: {
         connect: function () {
             console.log('APP:socket connected')
+        },
+        gameCreated: function(roomName) {
+            this.updateRoom({roomName })
         },
         gameData: function(data) {
             console.log('APP:game data')
@@ -52,12 +55,7 @@ export default {
         }
     },
     methods: {
-        createGame(createGameData, nickname) {
-            console.log('createGame()')
-            this.nickname = nickname
-            this.$socket.emit("createGame", createGameData, nickname);
-            //this.$store.state.gameState = 'created'
-        },
+        ...mapMutations([ 'createGame', 'updateRoom' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         startGame() {
@@ -142,9 +140,9 @@ export default {
 
     // These functions mostly route messages from the global event bus to the local functions
     mounted() {
-        this.eventBus.$on('create-game', (createGameData, nickname) => {
-            this.createGame(createGameData, nickname)
-        }),
+        this.eventBus.$on('set-nickname', nickname => (
+            this.nickname = nickname
+        )),
         this.eventBus.$on('join-game', (roomName, nickname) => (
             this.joinGame(roomName, nickname)
         )),
