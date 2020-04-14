@@ -7,12 +7,12 @@
         {{ team1MemberString }} 
         <h3 class="label-name">{{ team2Name }} Members:</h3>
         {{ team2MemberString }} 
-       <button v-show="isHost" v-on:click="startGame" class="start-button" >START GAME</button>
+       <button v-show="isHost" v-on:click="clickedStartGame" class="start-button" >START GAME</button>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
     name: 'Lobby',
@@ -28,7 +28,7 @@ export default {
     },
     computed: {
       ...mapGetters([
-          'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name'
+          'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name', 'getState'
       ]),
       team1MemberString() {
         console.log('team1memberstring')
@@ -40,13 +40,12 @@ export default {
       },
     },
     methods: {
+        ...mapMutations([ 'startGame' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
-        startGame() {
-            this.eventBus.$emit('start-game')
-        },
-        setName() {
-            this.eventBus.$emit('set-name')
+        clickedStartGame() {
+          this.startGame()
+          this.$socket.emit("startGame", this.getState)
         },
     }
 }

@@ -28,6 +28,9 @@ var game = function(io) {
             console.log('createGame');
             console.log(gameData);
             var roomName = generateRandomString(5)
+
+            // Save a round trip
+            gameData.roomName = roomName
             //var gameData = createNewGameData(roomName, createGameData, nickname)
             roomData[roomName] = gameData;
             socket.join(roomName);
@@ -45,18 +48,11 @@ var game = function(io) {
             io.to(roomName).emit('gameData', roomData[roomName]);
         })
 
-        socket.on('startGame', function(roomName) {
+        socket.on('startGame', function(gameData) {
             console.log('startGame');
-
-            // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
-            roomData[roomName].cards.cardListSelected = pickRandomCards(roomData[roomName].cards.maxSelectedCards, fullClueList.length - 1)
-            roomData[roomName].state.game = 'started'
-
-            console.log(roomData[roomName]);
-            io.to(roomName).emit('gameData', roomData[roomName]);
+            console.log(gameData);
+            io.to(gameData.roomName).emit('gameData', gameData);
         })
-
-
     })
 }
 

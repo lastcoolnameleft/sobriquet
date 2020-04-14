@@ -47,10 +47,19 @@ var store = new Vuex.Store({
       updateRoom(state, payload) {
         state.roomName = payload.roomName   
       },
+      startGame(state) {
+        // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
+        var randomCards = _.slice(_.shuffle(Array(state.maxSelectedCards).fill().map((_, i) => i)), 0, fullClueList.length - 1)
+        state.cardListSelected = randomCards
+        state.gameState = 'started'
+      }
     },
     getters: {
       host: state => {
           return state.host
+      },
+      roomName: state => {
+          return state.roomName
       },
       isGameStarted: state => {
           return state.gameState === 'started'
