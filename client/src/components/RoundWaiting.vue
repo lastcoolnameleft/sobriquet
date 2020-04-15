@@ -50,11 +50,8 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState', 'isActivePlayer'
       ]),
-      isActivePlayer() {
-        return this.nickname === this.activePlayerName
-      }
     },
 }
 </script>

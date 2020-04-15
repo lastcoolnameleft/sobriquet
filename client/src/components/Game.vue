@@ -5,7 +5,7 @@
         <RoundWaiting v-show="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
         <RoundComplete v-show="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <GameComplete v-show="isGameComplete" :eventBus="eventBus"></GameComplete>
-        <ClueGiver v-show="shouldGameDetailsBeVisible" :eventBus="eventBus"></ClueGiver>
+        <ClueGiver v-show="shouldGameDetailsBeVisible" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
     </div>
 </template>
 

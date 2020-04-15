@@ -43,6 +43,7 @@ var store = new Vuex.Store({
       ],
     },
     actions: {
+        // Take the first card from the selected list and show it to the clue-giver
         startRound(context) {
             context.commit('resetCardListInPlay')
             context.commit('setRoundState', 'started')
@@ -52,13 +53,10 @@ var store = new Vuex.Store({
         // Score points for that team (TBD) and draw a new card
         // Add the index of the card to the "scoredCardIndex"
         cardSuccess({ commit, getters} ) {
-            console.log('cardSuccess()')
             commit('scoreActiveCard')
             if (getters.numberOfCardsLeftInPlay > 0) {
-                console.log('going to call drawCard')
                 commit('drawCard')
             } else {
-                console.log('going to call endRound')
                 commit('endRound')
             }
           },
@@ -78,7 +76,7 @@ var store = new Vuex.Store({
             //if (this.gameData.rounds.activeRoundIndex > 2) {
     ////                this.endGame()
             //}
-          },    
+          },
     },
     mutations: {
       createGame(state, payload) {
@@ -115,14 +113,6 @@ var store = new Vuex.Store({
           console.log('setTurnState::value=' + value)
           state.turnState = value
       },
-      /*
-      startRound(state) {
-        console.log('startRound()')
-        state.cardListInPlay = [...state.cardListSelected]
-        state.roundState = 'started'
-        //this.startTurn()
-      },
-      */
       startTurn(state) {
         console.log('startTurn()')
         state.turnState = 'started'
@@ -137,7 +127,7 @@ var store = new Vuex.Store({
       // Add the index of the card to the "scoredCardIndex"
       scoreActiveCard(state) {
         state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
-      }, 
+      },
       /*
       cardSuccess(state) {
         console.log('cardSuccess()')
@@ -183,6 +173,12 @@ var store = new Vuex.Store({
       },
       activePlayerName(state) {
         return state.teamMembers[state.activeTeamIndex][state.activePlayerIndex]
+      },
+      isActiveTeam: (state) => (nickname) => {
+        return state.teamMembers[state.activeTeamIndex].includes(nickname)
+      },
+      isActivePlayer: (state, getters) => (nickname) => {
+        return nickname === getters.activePlayerName
       },
       isGameStarted: state => {
           return state.gameState === 'started'

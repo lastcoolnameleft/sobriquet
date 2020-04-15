@@ -10,18 +10,21 @@
               </h3>
             </div>
             <div class="timer" ></div>
-            <clue v-show="isRoundStarted"></clue>
-            <div class="buttons-container">
-              <button
-                class="pass-button ripple-pass"
-                v-on:click="clickedPass" >
-                Pass
-              </button>
-              <button
-                class="got-it-button ripple-got-it"
-                v-on:click="clickedSuccess" >
-                Success!
-              </button>
+            <div v-show="isRoundStarted && isActivePlayer(nickname)">
+              <clue></clue>
+              <div class="buttons-container">
+                <button
+                  class="pass-button ripple-pass"
+                  v-on:click="clickedPass" >
+                  Pass
+                </button>
+                <button
+                  class="got-it-button ripple-got-it"
+                  v-on:click="clickedSuccess" >
+                  Success!
+                </button>
+              </div>
+
             </div>
           </div>
     </div>
@@ -38,10 +41,14 @@ export default {
             type: Object,
             required: true
         },
+        nickname: {
+            type: String,
+            required: true
+        },
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer'
       ]),
     },
     methods: {
