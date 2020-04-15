@@ -10,7 +10,6 @@
 </template>
 
 <script>
-var fullClueList = require('../clue-list.json');
 var eventBus = new Vue()
 import Vue from 'vue'
 import ClueGiver from './ClueGiver'
@@ -47,11 +46,6 @@ export default {
         return {
             eventBus,
             nickname: '',
-            fullClueList,
-            clueListInPlay: [], // starts with same list as clueListSelected, but call pop() each time clue-giver draws cards
-            // 2 teams, 3 rounds, keep the index of each card that the team scores
-            // Looks like this:  scoredCardIndex[teamInfo.currentTeamIndex][roundInfo.currentRoundIndex][List of card indexes successfully scored]
-            scoredCardIndex: [[ [], [], [], ], [ [], [], [], ]] 
         }
     },
     methods: {
@@ -67,67 +61,6 @@ export default {
             this.nickname = nickname
             this.$socket.emit('joinGame', roomName, nickname);
         },
-        // To restart the game, reset some values and then start the game
-        restartGame() {
-            console.log('restartGame()')
-            this.createGame(this.nickname)
-        },
-        endGame() {
-            console.log('endGame()')
-            //this.$store.state.gameState = 'complete'
-        },
-        // Take the first card from the selected list and show it to the clue-giver
-        startRound() {
-            console.log('startRound()')
-            // Each time the round starts, we start over from the cards selected at the beginning
-            //this.gameData.cards.clueListInPlay = [...this.gameData.cards.clueListSelected]
-            //this.$store.state.roundState = 'started'
-            //this.startTurn()
-        },
-        endRound() {
-            //console.log('endRound()')
-            //this.$store.state.roundState = 'complete'
-            //this.$store.state.turnState = 'complete'
-            //this.gameData.rounds.activeRoundIndex += 1
-            //if (this.gameData.rounds.activeRoundIndex > 2) {
-////                this.endGame()
-            //}
-        },
-
-        startTurn() {
-            //console.log('startTurn()')
-            //this.gameData.state.turn = 'started'
-            //this.drawClue()
-        },
-        // Take the first card off the top of the In Play cards.
-        drawClue() {
-            //console.log('drawClue()')
-            //this.gameData.cards.activeCardIndex = this.gameData.cards.clueListInPlay.pop()
-        },
-        // Score points for that team (TBD) and draw a new card
-        // Add the index of the card to the "scoredCardIndex"
-        clueSuccess() {
-            //console.log('clueSuccess()')
-            /*
-            this.gameData.cards.scoredCardIndex[this.gameData.teams.activeTeamIndex][this.gameData.rounds.activeRoundIndex].push(this.gameData.cards.activeCardIndex)
-            if (this.gameData.numberOfcardsLeftInPlay() > 0) {
-                this.drawClue()
-            } else {
-                this.endRound()
-            }
-            */
-        },
-        // Clue-giver gives up.  Put card on bottom of deck and draw a new one
-        // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
-        cluePass() {
-            //console.log('cluePass()')
-            /*
-            this.gameData.cards.cardListInPlay.unshift(this.gameData.cards.activeCardIndex)
-            this.drawClue()
-            console.log('cluePass: ' + this.gameData.cards.clueListInPlay)
-            */
-        },
-
     },
     computed: {
         ...mapGetters([
@@ -145,27 +78,6 @@ export default {
         )),
         this.eventBus.$on('join-game', (roomName, nickname) => (
             this.joinGame(roomName, nickname)
-        )),
-        this.eventBus.$on('start-game', () => (
-            this.startGame()
-        )),
-        this.eventBus.$on('set-name', () => (
-            this.startGame()
-        )),
-        this.eventBus.$on('restart-game', () => (
-            this.restartGame()
-        )),
-        this.eventBus.$on('start-round', () => (
-            this.startRound()
-        )),
-        this.eventBus.$on('start-turn', () => (
-            this.startTurn()
-        )),
-        this.eventBus.$on('clue-giver-success', () => (
-            this.clueSuccess()
-        )),
-        this.eventBus.$on('clue-giver-pass', () => (
-            this.cluePass()
         ))
     }
 }
