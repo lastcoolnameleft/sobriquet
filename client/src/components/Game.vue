@@ -2,8 +2,8 @@
     <div>
         <GameWaiting v-show="isGameWaiting" :eventBus="eventBus"></GameWaiting>
         <Lobby v-show="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
-        <RoundWaiting v-show="isRoundWaiting" :eventBus="eventBus"></RoundWaiting>
-        <RoundComplete v-show="isRoundComplete" :eventBus="eventBus"></RoundComplete>
+        <RoundWaiting v-show="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
+        <RoundComplete v-show="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <GameComplete v-show="isGameComplete" :eventBus="eventBus"></GameComplete>
         <ClueGiver v-show="shouldGameDetailsBeVisible" :eventBus="eventBus"></ClueGiver>
     </div>

@@ -31,11 +31,9 @@ export default {
           'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name', 'getState'
       ]),
       team1MemberString() {
-        console.log('team1memberstring')
         return this.team1Members.join('</br>')
       },
       team2MemberString() {
-        console.log('team2memberstring')
         return this.team2Members.join('</br>')
       },
     },

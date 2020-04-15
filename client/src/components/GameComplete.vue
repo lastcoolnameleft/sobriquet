@@ -36,13 +36,13 @@ export default {
     },
     computed: {
         ...mapGetters([
-          'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+          'team1Score', 'team2Score', 'team1Name', 'team2Name'
         ]),
         winner() {
             if (this.team1Score > this.team2Score) {
-              return this.teamInfo.names[0] + " WINS!"
+              return this.team1Name + " WINS!"
             } else if (this.team2Score > this.team1Score) {
-              return this.teamInfo.names[1] + " WINS!"
+              return this.team2Name + " WINS!"
             } else {
               return "IT'S A TIE!"
             }

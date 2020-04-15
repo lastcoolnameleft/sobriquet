@@ -14,12 +14,12 @@
             <div class="buttons-container">
               <button
                 class="pass-button ripple-pass"
-                v-on:click="clueGiverPass" >
+                v-on:click="clickedPass" >
                 Pass
               </button>
               <button
                 class="got-it-button ripple-got-it"
-                v-on:click="clueGiverSuccess" >
+                v-on:click="clickedSuccess" >
                 Success!
               </button>
             </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import Clue from './Clue'
 
 export default {
@@ -45,14 +45,15 @@ export default {
       ]),
     },
     methods: {
+      ...mapActions([ 'cardSuccess', 'cardPass']),
         clueGiverTimeout() {
             this.eventBus.$emit('clue-giver-timeout')
         },
-        clueGiverSuccess() {
-            this.eventBus.$emit('clue-giver-success', this.clueIndex)
+        clickedSuccess() {
+          this.cardSuccess()
         },
-        clueGiverPass() {
-            this.eventBus.$emit('clue-giver-pass', this.clueIndex)
+        clickedPass() {
+          this.cardSuccess()
         }
     }
     

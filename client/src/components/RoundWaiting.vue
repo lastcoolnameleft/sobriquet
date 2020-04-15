@@ -17,16 +17,16 @@
             {{activeTeamName}} Starts
           </h3>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            {{activeTeamMembers}} Starts
+            {{activePlayerName}} Starts
           </h3>
-          <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
+          <button v-show="isActivePlayer" v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
         </div>
       </div>
 
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     props: {
@@ -34,18 +34,27 @@ export default {
             type: Object,
             required: true
         },
+        nickname: {
+            type: String,
+            required: true
+        },
     },
     methods: {
+        ...mapActions([ 'startRound' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
-        startRound() {
-            this.eventBus.$emit('start-round')
+        clickedStartRound() {
+          this.startRound()
+          this.$socket.emit("startRound", this.getState);
         },
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState'
       ]),
+      isActivePlayer() {
+        return this.nickname === this.activePlayerName
+      }
     },
 }
 </script>
