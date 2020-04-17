@@ -29,10 +29,7 @@ var game = function(io) {
             console.log('createGame');
             console.log(gameData);
             var roomName = generateRandomString(5)
-
-            // Save a round trip
             gameData.roomName = roomName
-            //var gameData = createNewGameData(roomName, createGameData, nickname)
             roomData[roomName] = gameData;
             socket.join(roomName);
             //console.log(roomData[roomName]);
@@ -46,7 +43,6 @@ var game = function(io) {
             var teamIndex = addTeamMember(roomData[roomName].teamMembers, nickname)
             socket.join(roomName);
             console.log(roomData[roomName]);
-            io.emit('teamAssignment', teamIndex);
             io.to(roomName).emit('gameData', roomData[roomName]);
         })
 

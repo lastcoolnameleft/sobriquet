@@ -43,51 +43,79 @@ var store = new Vuex.Store({
       ],
     },
     actions: {
+        createGame(context, payload) {
+          context.commit('initGame', payload)
+        },
         // Take the first card from the selected list and show it to the clue-giver
         startRound(context) {
+            console.log('action.startRound')
             context.commit('resetCardListInPlay')
             context.commit('setRoundState', 'started')
             context.commit('startTurn')
             context.commit('drawCard')
         },
-        // Score points for that team (TBD) and draw a new card
-        // Add the index of the card to the "scoredCardIndex"
-        cardSuccess({ commit, getters} ) {
-            commit('scoreActiveCard')
-            if (getters.numberOfCardsLeftInPlay > 0) {
-                commit('drawCard')
-            } else {
-                commit('endRound')
-            }
-          },
+        drawCard(context) {
+          context.commit('drawCard')
+        },
+        cardSuccess({getters, commit, dispatch}) {
+          console.log('action.cardSuccess()')
+          commit('scoreCurrentCard')
+          if (getters.numberOfCardsLeftInPlay > 0) {
+            dispatch('drawCard')
+          } else {
+            dispatch('endRound')
+          }
+        },
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
         // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
         cardPass({commit, state}) {
-            console.log('cardPass()')
+            console.log('action.cardPass()')
             commit('moveActiveCardToBottom')
-            commit.drawCard()
+            commit('drawCard')
             console.log('cardPass: ' + state.cardListInPlay)
         },
-          endRound(state) {
-            //console.log('endRound()')
-            state.roundState = 'complete'
-            state.turnState = 'complete'
-            state.activeRoundIndex += 1
-            //if (this.gameData.rounds.activeRoundIndex > 2) {
-    ////                this.endGame()
-            //}
+          endRound({commit, state, dispatch}) {
+            console.log('action.endRound()')
+            commit('setRoundState', 'complete')
+            commit('setTurnState', 'complete')
+            commit('incrementActiveRoundIndex')
+            if (state.activeRoundIndex > 2) {
+              dispatch('endGame')
+            }
           },
+        updateRoom({commit}, roomName) {
+          commit('updateRoom', roomName)
+        },
+        updateTeamMembers({commit}, teamMembers) {
+          commit('updateTeamMembers', teamMembers)
+        },
+        setStore({commit}, newState) {
+          commit('setStore', newState)
+        },
+        endGame({commit}) {
+          commit('setGameState', 'complete')
+        }
     },
     mutations: {
-      createGame(state, payload) {
+      scoreCurrentCard(state) {
+        console.log('mutation.scoreCurrentCard')
+        state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
+      },
+      setStore(state, newState) {
+        state = Object.assign(state, newState)
+      },
+      updateTeamMembers(state, teamMembers) {
+        state.teamMembers = teamMembers
+      },
+      initGame(state, payload) {
         state.teamNames = [payload.team1Name, payload.team2Name]
         state.maxSelectedCards = payload.numCards
         state.gameState = 'created'
         state.host = payload.nickname
         state.teamMembers[0].push(payload.nickname)
       },
-      updateRoom(state, payload) {
-        state.roomName = payload.roomName   
+      updateRoom(state, roomName) {
+        state.roomName = roomName   
       },
       startGame(state) {
         // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
@@ -100,6 +128,9 @@ var store = new Vuex.Store({
       },
       resetCardListInPlay(state) {
         state.cardListInPlay = [...state.cardListSelected]
+      },
+      incrementActiveRoundIndex(state) {
+        state.activeRoundIndex += 1
       },
       setRoundState(state, value) {
           console.log('setRoundState::value=' + value)
@@ -155,7 +186,7 @@ var store = new Vuex.Store({
         }
       },
       endRound(state) {
-        //console.log('endRound()')
+        console.log('mutation.endRound()')
         state.roundState = 'complete'
         state.turnState = 'complete'
         state.activeRoundIndex += 1

@@ -9,7 +9,7 @@
           </h5>
         </div>
         <div class="round-transition">
-          <h2 class="round-headline">{{activeRoundName}} complete</h2>
+          <h2 class="round-headline">{{activeRoundName}}</h2>
           <div class="dashed-line" ></div>
           <p class="round-description">{{activeRoundDescription}}</p>
           <div class="dashed-line" ></div>
@@ -17,15 +17,15 @@
             {{activeTeamName}} Starts
           </h3>
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            Player #1 Starts
+            {{activePlayerName}} Starts
           </h3>
-          <button v-on:click="startRound" class="start-round-button" >START ROUND</button>
+          <button v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
         </div>
       </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     props: {
@@ -35,15 +35,16 @@ export default {
         },
     },
     methods: {
+        ...mapActions([ 'startRound' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
-        startRound() {
-            this.eventBus.$emit('start-round')
+        clickedStartRound() {
+            this.startRound()
         },
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName'
       ]),
     },
 }

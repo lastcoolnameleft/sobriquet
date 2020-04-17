@@ -48,7 +48,7 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer'
+        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay'
       ]),
     },
     methods: {
@@ -56,11 +56,14 @@ export default {
         clueGiverTimeout() {
             this.eventBus.$emit('clue-giver-timeout')
         },
+        // Score points for that team (TBD) and draw a new card
+        // Add the index of the card to the "scoredCardIndex"
         clickedSuccess() {
+          console.log('ClueGiver.clickedSuccess()')
           this.cardSuccess()
         },
         clickedPass() {
-          this.cardSuccess()
+          this.cardPass()
         }
     }
     

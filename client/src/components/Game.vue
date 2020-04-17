@@ -3,8 +3,8 @@
         <GameWaiting v-show="isGameWaiting" :eventBus="eventBus"></GameWaiting>
         <Lobby v-show="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
         <RoundWaiting v-show="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
-        <RoundComplete v-show="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <GameComplete v-show="isGameComplete" :eventBus="eventBus"></GameComplete>
+        <RoundComplete v-show="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <ClueGiver v-show="shouldGameDetailsBeVisible" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
     </div>
 </template>
@@ -18,7 +18,7 @@ import RoundWaiting from './RoundWaiting'
 import RoundComplete from './RoundComplete'
 import GameComplete from './GameComplete'
 import Lobby from './Lobby'
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, Lobby },
@@ -27,12 +27,15 @@ export default {
             console.log('APP:socket connected')
         },
         gameCreated: function(roomName) {
-            this.updateRoom({roomName })
+            this.updateRoom(roomName)
+        },
+        updateTeamMembers: function(teamMembers) {
+            this.updateTeamMembers(teamMembers)
         },
         gameData: function(data) {
             console.log('APP:game data')
             console.log(data)
-            this.$store.replaceState(data)
+            this.setStore(data)
         },
         customEmit: function () {
             console.log('APP:this method was fired by the socket server. eg: io.emit("customEmit", data)')
@@ -49,22 +52,17 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([ 'createGame', 'updateRoom' ]),
+        ...mapActions([ 'updateRoom', 'updateTeamMembers', 'setStore' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         startGame() {
             console.log('startGame()')
             this.$socket.emit('startGame', this.roomName);
         },
-        joinGame(roomName, nickname) {
-            console.log('joinGame()')
-            this.nickname = nickname
-            this.$socket.emit('joinGame', roomName, nickname);
-        },
     },
     computed: {
         ...mapGetters([
-            'isGameStarted', 'isGameWaiting', 'isGameWaiting', 'isRoundWaiting', 'isTurnWaiting', 'isRoundComplete', 'isGameComplete', 'isGameCreated', 'shouldGameDetailsBeVisible', 'host'
+            'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete', 'isGameCreated', 'shouldGameDetailsBeVisible', 'host'
         ]),
         isHost() {
             return this.$store.state.host == this.nickname
