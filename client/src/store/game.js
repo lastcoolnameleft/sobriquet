@@ -74,11 +74,12 @@ var store = new Vuex.Store({
             commit('drawCard')
             console.log('cardPass: ' + state.cardListInPlay)
         },
-          endRound({commit, state, dispatch}) {
+          endRound({commit, getters, state, dispatch}) {
             console.log('action.endRound()')
             commit('setRoundState', 'complete')
             commit('setTurnState', 'complete')
             commit('incrementActiveRoundIndex')
+            commit('setActiveTeamAfterRound', { team1Score: getters.team1Score, team2Score: getters.team2Score})
             if (state.activeRoundIndex > 2) {
               dispatch('endGame')
             }
@@ -97,6 +98,39 @@ var store = new Vuex.Store({
         }
     },
     mutations: {
+      // If there's no members in the other team, don't swap.
+      // Otherwise, set to the team with the lowest score
+      setActiveTeamAfterRound(state, payload) {
+        console.log('mutation.setActiveTeamAfterRound()')
+        const inactiveTeamIndex = state.activeTeamIndex == 0 ? 1 : 0
+        if (state.teamMembers[inactiveTeamIndex].length == 0) {
+          console.log('Only playing with one person.  Skipping')
+          return
+        }
+
+        if (payload.team1Score > payload.team2Score) {
+          state.activeTeamIndex = 1
+        }
+        else if (payload.team2Score > payload.team1Score) {
+          state.activeTeamIndex = 0
+        }
+        else if (payload.team1Score == payload.team2Score) {
+          state.activeTeamIndex = inactiveTeamIndex
+        }
+
+      },
+      setActiveTeamIndex(state, newActiveTeamIndex) {
+        state.activeTeamIndex = newActiveTeamIndex
+      },
+
+      swapActiveTeam(state) {
+        console.log('mutation.swapActiveTeam')
+        if (state.activeTeamIndex == 1) {
+          state.activeTeamIndex == 0
+        } else {
+          state.activeTeamIndex == 1
+        }
+      },
       scoreCurrentCard(state) {
         console.log('mutation.scoreCurrentCard')
         state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
@@ -159,17 +193,6 @@ var store = new Vuex.Store({
       scoreActiveCard(state) {
         state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
       },
-      /*
-      cardSuccess(state) {
-        console.log('cardSuccess()')
-        state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
-        if (state.numberOfCardsLeftInPlay > 0) {
-            this.drawCard()
-        } else {
-            this.endRound()
-        }
-      },
-      */
       // Clue-giver gives up.  Put card on bottom of deck and draw a new one
       // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
       cardPass(state) {
@@ -190,12 +213,12 @@ var store = new Vuex.Store({
         state.roundState = 'complete'
         state.turnState = 'complete'
         state.activeRoundIndex += 1
-        //if (this.gameData.rounds.activeRoundIndex > 2) {
-////                this.endGame()
-        //}
       },
     },
     getters: {
+      inactiveTeamIndex: state => {
+        return state.activeTeamIndex == 0 ? 1 : 0
+      },
       host: state => {
           return state.host
       },
