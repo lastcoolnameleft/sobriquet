@@ -19,7 +19,7 @@
           <h3 class="starting-team" style="{ color: '#00B4EF' };">
             {{activePlayerName}} Starts
           </h3>
-          <button v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
+          <button  v-show="isActivePlayer(nickname)" v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
         </div>
       </div>
 </template>
@@ -33,6 +33,10 @@ export default {
             type: Object,
             required: true
         },
+        nickname: {
+            type: String,
+            required: true
+        },
     },
     methods: {
         ...mapActions([ 'startRound' ]),
@@ -44,7 +48,8 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName',
+        'isActivePlayer'
       ]),
     },
 }

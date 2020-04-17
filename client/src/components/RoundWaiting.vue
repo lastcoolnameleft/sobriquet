@@ -50,7 +50,8 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState', 'isActivePlayer'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState', 'isActivePlayer',
+        'roomName', 'getState'
       ]),
     },
 }

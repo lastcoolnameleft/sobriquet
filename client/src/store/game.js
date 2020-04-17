@@ -209,6 +209,7 @@ var store = new Vuex.Store({
         return state.teamMembers[state.activeTeamIndex].includes(nickname)
       },
       isActivePlayer: (state, getters) => (nickname) => {
+        console.log('isActivePlayer(' + nickname + ')::activePlayerName=' + getters.activePlayerName)
         return nickname === getters.activePlayerName
       },
       isGameStarted: state => {

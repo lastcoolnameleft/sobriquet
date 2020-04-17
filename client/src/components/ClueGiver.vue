@@ -2,12 +2,13 @@
         <div class="background-image">
           <div class="play">
             <div class="game-info-container">
-              <h3 class="current-team" >
-                {{ activeTeamName }}
-              </h3>
-              <h3 class="current-round">
-                {{ activeRoundName }}
-              </h3>
+          <h5 class="scores blue">
+            Team #1 : {{team1Score}}
+          </h5>
+          <h5 class="scores purple">
+            Team #2 : {{team2Score}}
+          </h5>
+
             </div>
             <div class="timer" ></div>
             <div v-show="isRoundStarted && isActivePlayer(nickname)">
@@ -48,7 +49,8 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay'
+        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay', 'team1Score', 'team2Score',
+        'getState', 'getRoomName'
       ]),
     },
     methods: {
@@ -61,6 +63,7 @@ export default {
         clickedSuccess() {
           console.log('ClueGiver.clickedSuccess()')
           this.cardSuccess()
+          this.$socket.emit('updateScore', this.getState);
         },
         clickedPass() {
           this.cardPass()
@@ -341,4 +344,24 @@ export default {
 
 }
 }
+
+.scores {
+  display: inline-block;
+  margin: 15px auto 15px auto;
+  
+}
+
+.blue {
+  color: #00B4EF;
+  font-size: 1.1rem;
+  font-weight: 600;
+
+}
+
+.purple {
+  color: #866AAD;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 </style>

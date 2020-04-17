@@ -57,6 +57,11 @@ var game = function(io) {
             console.log(gameData);
             io.to(gameData.roomName).emit('gameData', gameData);
         })
+        socket.on('updateScore', function(gameData) {
+            console.log('updateScore');
+            console.log(gameData);
+            io.to(gameData.roomName).emit('gameData', gameData);
+        })
     })
 }
 
