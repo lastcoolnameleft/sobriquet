@@ -84,6 +84,9 @@ export default {
         this.endTurn()
       }.bind(this), 2000)
       console.log('CREATED')
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
     }
     
 }

@@ -44,12 +44,13 @@ export default {
         // The Selected cards are now "In Play".
         clickedStartRound() {
             this.startRound()
+            this.$socket.emit('startRound', this.getState);
         },
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName',
-        'isActivePlayer'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription',
+        'activeTeamName', 'activePlayerName', 'isActivePlayer', 'getState'
       ]),
     },
 }

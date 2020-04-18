@@ -24,7 +24,7 @@ var store = new Vuex.Store({
       
       // 0 = round 1, 1 = round 2, 2 = round 3.  Because that's how zero-indexing works.
       activeRoundIndex: 0,
-      activePlayerIndex: 0,
+      activePlayerIndex: [0, 0],
       activeTeamIndex: 0,
       activeCardIndex: -1,
       
@@ -148,9 +148,9 @@ var store = new Vuex.Store({
           return
         }
         if (state.activeTeamIndex == 1) {
-          state.activeTeamIndex == 0
+          state.activeTeamIndex = 0
         } else {
-          state.activeTeamIndex == 1
+          state.activeTeamIndex = 1
         }
       },
       scoreCurrentCard(state) {
@@ -225,9 +225,9 @@ var store = new Vuex.Store({
       },
       // TODO:  Write a test for this.  
       nextPlayer(state) {
-        state.activePlayerIndex++
-        if (state.activePlayerIndex >= state.teamMembers[state.activeTeamIndex].length ) {
-            state.activePlayerIndex = 0
+        state.activePlayerIndex[state.activeTeamIndex]++
+        if (state.activePlayerIndex[state.activeTeamIndex] >= state.teamMembers[state.activeTeamIndex].length ) {
+            state.activePlayerIndex[state.activeTeamIndex] = 0
         }
       },
       endRound(state) {
@@ -248,7 +248,7 @@ var store = new Vuex.Store({
           return state.roomName
       },
       activePlayerName(state) {
-        return state.teamMembers[state.activeTeamIndex][state.activePlayerIndex]
+        return state.teamMembers[state.activeTeamIndex][state.activePlayerIndex[state.activeTeamIndex]]
       },
       isActiveTeam: (state) => (nickname) => {
         return state.teamMembers[state.activeTeamIndex].includes(nickname)

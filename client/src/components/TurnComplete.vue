@@ -40,11 +40,13 @@ export default {
       ...mapActions([ 'startTurn' ]),
         clickedStartTurn() {
             this.startTurn()
+            this.$socket.emit('startTurn', this.getState);
         },
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activePlayerName', 'isActivePlayer', 'numberOfCardsLeftInPlay'
+        'team1Score', 'team2Score', 'activePlayerName', 'isActivePlayer', 'numberOfCardsLeftInPlay',
+        'getState'
       ]),
     },
 }
