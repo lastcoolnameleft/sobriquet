@@ -1,11 +1,12 @@
 <template>
     <div>
-        <GameWaiting v-show="isGameWaiting" :eventBus="eventBus"></GameWaiting>
-        <Lobby v-show="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
-        <RoundWaiting v-show="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
-        <GameComplete v-show="isGameComplete" :eventBus="eventBus"></GameComplete>
-        <RoundComplete v-show="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
-        <ClueGiver v-show="shouldGameDetailsBeVisible" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
+        <TurnComplete v-if="isTurnComplete" :nickname="nickname" :eventBus="eventBus"></TurnComplete>
+        <RoundWaiting v-else-if="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
+        <GameComplete v-else-if="isGameComplete" :eventBus="eventBus"></GameComplete>
+        <RoundComplete v-else-if="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
+        <GameWaiting v-else-if="isGameWaiting" :eventBus="eventBus"></GameWaiting>
+        <Lobby v-else-if="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
+        <ClueGiver v-else-if="shouldGameDetailsBeVisible" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
     </div>
 </template>
 
@@ -15,13 +16,14 @@ import Vue from 'vue'
 import ClueGiver from './ClueGiver'
 import GameWaiting from './GameWaiting'
 import RoundWaiting from './RoundWaiting'
-import RoundComplete from './RoundComplete'
 import GameComplete from './GameComplete'
+import RoundComplete from './RoundComplete'
+import TurnComplete from './TurnComplete'
 import Lobby from './Lobby'
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, Lobby },
+    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, TurnComplete, Lobby },
     sockets: {
         connect: function () {
             console.log('APP:socket connected')
@@ -62,7 +64,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete', 'isGameCreated', 'shouldGameDetailsBeVisible', 'host'
+            'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete', 'isGameCreated', 'shouldGameDetailsBeVisible', 'host', 'isTurnComplete'
         ]),
         isHost() {
             return this.$store.state.host == this.nickname

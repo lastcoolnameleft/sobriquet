@@ -44,21 +44,23 @@ var store = new Vuex.Store({
     },
     actions: {
         createGame(context, payload) {
+            console.log('actions.createGame')
           context.commit('initGame', payload)
         },
         // Take the first card from the selected list and show it to the clue-giver
         startRound(context) {
-            console.log('action.startRound')
+            console.log('actions.startRound')
             context.commit('resetCardListInPlay')
             context.commit('setRoundState', 'started')
             context.commit('startTurn')
             context.commit('drawCard')
         },
         drawCard(context) {
+          console.log('actions.drawCard()')
           context.commit('drawCard')
         },
         cardSuccess({getters, commit, dispatch}) {
-          console.log('action.cardSuccess()')
+          console.log('actions.cardSuccess()')
           commit('scoreCurrentCard')
           if (getters.numberOfCardsLeftInPlay > 0) {
             dispatch('drawCard')
@@ -69,13 +71,13 @@ var store = new Vuex.Store({
         // Clue-giver gives up.  Put card on bottom of deck and draw a new one
         // The rules say the card is lost for this round, but keeping logic simple for now and adding to bottom of deck
         cardPass({commit, state}) {
-            console.log('action.cardPass()')
+            console.log('actions.cardPass()')
             commit('moveActiveCardToBottom')
             commit('drawCard')
             console.log('cardPass: ' + state.cardListInPlay)
         },
           endRound({commit, getters, state, dispatch}) {
-            console.log('action.endRound()')
+            console.log('actions.endRound()')
             commit('setRoundState', 'complete')
             commit('setTurnState', 'complete')
             commit('incrementActiveRoundIndex')
@@ -85,16 +87,31 @@ var store = new Vuex.Store({
             }
           },
         updateRoom({commit}, roomName) {
+          console.log('actions.updateRoom')
           commit('updateRoom', roomName)
         },
         updateTeamMembers({commit}, teamMembers) {
+          console.log('actions.updateTeamMembers')
           commit('updateTeamMembers', teamMembers)
         },
         setStore({commit}, newState) {
+          console.log('actions.setStore')
           commit('setStore', newState)
         },
         endGame({commit}) {
+          console.log('actions.endGame')
           commit('setGameState', 'complete')
+        },
+        endTurn({commit}) {
+          console.log('actions.endTurn')
+          commit('setTurnState', 'complete')
+          commit('swapActiveTeam')
+          commit('moveActiveCardToBottom')
+        },
+        startTurn({commit}) {
+          console.log('actions.startTurn')
+          commit('setTurnState', 'started')
+          commit('drawCard')
         }
     },
     mutations: {
@@ -125,6 +142,11 @@ var store = new Vuex.Store({
 
       swapActiveTeam(state) {
         console.log('mutation.swapActiveTeam')
+        const inactiveTeamIndex = state.activeTeamIndex == 0 ? 1 : 0
+        if (state.teamMembers[inactiveTeamIndex].length == 0) {
+          console.log('Only playing with one person.  Skipping')
+          return
+        }
         if (state.activeTeamIndex == 1) {
           state.activeTeamIndex == 0
         } else {
@@ -249,6 +271,9 @@ var store = new Vuex.Store({
       },
       isTurnWaiting: state => {
           return state.gameState === 'started' && state.roundState === 'started' && state.turnState === 'waiting'
+      },
+      isTurnComplete: state => {
+          return state.gameState === 'started' && state.roundState === 'started' && state.turnState === 'complete'
       },
       isRoundComplete: state => {
           return state.gameState === 'started' && state.roundState === 'complete'

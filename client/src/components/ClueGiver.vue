@@ -47,6 +47,12 @@ export default {
             required: true
         },
     },
+    data() {
+      return {
+        timer: null,
+        foo: ''
+      }
+    },
     computed: {
       ...mapGetters([
         'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay', 'team1Score', 'team2Score',
@@ -54,7 +60,7 @@ export default {
       ]),
     },
     methods: {
-      ...mapActions([ 'cardSuccess', 'cardPass']),
+      ...mapActions([ 'cardSuccess', 'cardPass', 'endTurn' ]),
         clueGiverTimeout() {
             this.eventBus.$emit('clue-giver-timeout')
         },
@@ -67,7 +73,17 @@ export default {
         },
         clickedPass() {
           this.cardPass()
-        }
+        },
+        log() {
+          console.log('TIMER')
+        },
+    },
+    created: function() {
+      this.timer = setTimeout(function() {
+        console.log('timer complete')
+        this.endTurn()
+      }.bind(this), 2000)
+      console.log('CREATED')
     }
     
 }
