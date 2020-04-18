@@ -7,7 +7,7 @@
           {{activeCard.category}}
         </h3>
         <div class="circle" style="background-color: rgb(0, 180, 239);">
-          <h1 class="points">{{activeCard.points}}</h1>
+          <h1 class="points">{{activeCard.pointValue}}</h1>
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 var _ = require('lodash');
-var fullCardList = require('../clue-list.json');
+//import fullCardList from '../assets/cards'
+var fullCardList = require('../assets/cards');
 
 //import createLogger from '../../../src/plugins/logger'
 
@@ -175,7 +176,7 @@ var store = new Vuex.Store({
       },
       startGame(state) {
         // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
-        var randomCards = _.slice(_.shuffle(Array(state.maxSelectedCards).fill().map((_, i) => i)), 0, fullCardList.length - 1)
+        var randomCards = _.slice(_.shuffle(Array(fullCardList.length - 1).fill().map((_, i) => i)), 0, state.maxSelectedCards)
         state.cardListSelected = randomCards
         state.gameState = 'started'
       },
@@ -210,7 +211,7 @@ var store = new Vuex.Store({
         console.log('drawCard()')
         state.activeCardIndex = state.cardListInPlay.pop()
       },
-      // Score points for that team (TBD) and draw a new card
+      // Score pointValue for that team (TBD) and draw a new card
       // Add the index of the card to the "scoredCardIndex"
       scoreActiveCard(state) {
         state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex].push(state.activeCardIndex)
@@ -290,17 +291,17 @@ var store = new Vuex.Store({
       numberOfCardsLeftInPlay: state => {
           return state.cardListInPlay.length
       },
-      // To calculate the score, sum all of the points for each card scored for a single round.  And then add up all 3 rounds
+      // To calculate the score, sum all of the pointValue for each card scored for a single round.  And then add up all 3 rounds
       team1Score: state => {
-          var team1round1 =  _.reduce(state.scoredCardIndex[0][0], function(sum, n) { return sum + fullCardList[n].points }, 0)
-          var team1round2 =  _.reduce(state.scoredCardIndex[0][1], function(sum, n) { return sum + fullCardList[n].points }, 0)
-          var team1round3 =  _.reduce(state.scoredCardIndex[0][2], function(sum, n) { return sum + fullCardList[n].points }, 0)
+          var team1round1 =  _.reduce(state.scoredCardIndex[0][0], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
+          var team1round2 =  _.reduce(state.scoredCardIndex[0][1], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
+          var team1round3 =  _.reduce(state.scoredCardIndex[0][2], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
           return team1round1 + team1round2 + team1round3
       },
       team2Score: state => {
-          var team2round1 =  _.reduce(state.scoredCardIndex[1][0], function(sum, n) { return sum + fullCardList[n].points }, 0)
-          var team2round2 =  _.reduce(state.scoredCardIndex[1][1], function(sum, n) { return sum + fullCardList[n].points }, 0)
-          var team2round3 =  _.reduce(state.scoredCardIndex[1][2], function(sum, n) { return sum + fullCardList[n].points }, 0)
+          var team2round1 =  _.reduce(state.scoredCardIndex[1][0], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
+          var team2round2 =  _.reduce(state.scoredCardIndex[1][1], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
+          var team2round3 =  _.reduce(state.scoredCardIndex[1][2], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
           return team2round1 + team2round2 + team2round3
       },
       activeRoundName: state => {
@@ -316,7 +317,7 @@ var store = new Vuex.Store({
           return state.teamMembers[state.activeTeamIndex]
       },
       emptyCard: () => {
-          return { name: '', description: '', category: '', points: 0 }
+          return { name: '', description: '', category: '', pointValue: 0 }
       },
       activeCard: (state, getters) => {
           return state.activeCardIndex >= 0 ? fullCardList[state.activeCardIndex] : getters.emptyCard

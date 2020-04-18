@@ -1,8 +1,6 @@
 var _ = require('lodash');
 var debug = require('debug')('game:socket');
-var fullClueList = require('./public/clue-list.json');
 var roomData = {};
-// io.on('connection', function (socket) {
 
 
 var addTeamMember = function(teamMembers, nickname) {
@@ -14,12 +12,6 @@ var addTeamMember = function(teamMembers, nickname) {
   return teamIndex
 }
 
-// If we have 13 cards and want 5, Create an array of 0-12, shuffle it and then take the first 5 elements
-var pickRandomCards = function(noToPick, noOfCards) {
-    //console.log('pickRandomCards()')
-    return _.slice(_.shuffle(Array(noOfCards).fill().map((_, i) => i)), 0, noToPick)
-}
-
 var game = function(io) {
     io.on('connection', (socket) => {
 
@@ -28,7 +20,7 @@ var game = function(io) {
         socket.on('createGame', function(gameData) {
             console.log('createGame');
             console.log(gameData);
-            var roomName = generateRandomString(5)
+            var roomName = generateRandomString(4)
             gameData.roomName = roomName
             roomData[roomName] = gameData;
             socket.join(roomName);
@@ -69,7 +61,14 @@ var game = function(io) {
     })
 }
 
-generateRandomString = function(len) {
-    return Math.random().toString(36).substr(2, len).toUpperCase();
-}
+generateRandomString = function(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+
 module.exports = game;

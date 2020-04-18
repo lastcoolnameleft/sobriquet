@@ -80,10 +80,10 @@ export default {
     },
     created: function() {
       this.timer = setTimeout(function() {
-        console.log('timer complete')
+        console.log('TIMER COMPLETE')
         this.endTurn()
-      }.bind(this), 2000)
-      console.log('CREATED')
+      }.bind(this), 60000)
+      console.log('TIMER CREATED')
     },
     beforeDestroy () {
       clearTimeout(this.timer)
