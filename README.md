@@ -1,32 +1,30 @@
-# monikers
-My attempt at an online version of Moniker's during this pandemic
+# Sobriquet
+
+My attempt at an online version of the popular party game [Monikers](http://www.monikersgame.com/) during this crazy pandemic.
 
 ## Building and running on localhost
 
-First install dependencies:
+Window #1 - Backend
 
 ```sh
+git clone https://github.com/lastcoolnameleft/sobriquet.git
+cd sobriquet/server
 npm install
+npm run start-dev
 ```
 
-To run in hot module reloading mode:
+Window #2 - Frontend
 
 ```sh
-npm start
+cd sobriquet/client
+npm install
+npm run start-dev
 ```
 
-To create a production build:
-
-```sh
-npm run build-prod
-```
-
-## Running
-
-```sh
-node dist/bundle.js
-```
+In browser, go to: http://localhost:8080/
 
 ## Credits
 
-Made with [createapp.dev](https://createapp.dev/)
+Thanks to:
+* [David Daugherty](https://github.com/daughedm/monikers) who created the UI/UX which this is based upon. 
+* The great people at [Monikers Game](http://www.monikersgame.com/) who was the inspiration for this
