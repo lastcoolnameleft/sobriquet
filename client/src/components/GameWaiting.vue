@@ -124,6 +124,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #FFF;
   background-color: #fff;
+  text-transform: uppercase;
 }
 
 input::placeholder {
@@ -217,7 +218,22 @@ input {
     margin: auto;
     padding: 30px 0;
   }
-
-
 }
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    text-transform: none;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    text-transform: none;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    text-transform: none;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    text-transform: none;
+}
+::placeholder { /* Recent browsers */
+    text-transform: none;
+}
+
 </style>

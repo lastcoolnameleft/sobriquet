@@ -3,13 +3,38 @@ var debug = require('debug')('game:socket');
 var roomData = {};
 
 
-var addTeamMember = function(teamMembers, nickname) {
+const addTeamMember = function(teamMembers, nickname) {
   var teamIndex = 0
   if (teamMembers[0].length > teamMembers[1].length) {
     teamIndex = 1
   }
   teamMembers[teamIndex].push(nickname)
   return teamIndex
+}
+
+const generateRandomString = function(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+const isDuplicateNickname = function(teamMembers, nickname) {
+    if (teamMembers[0].find( i => i == nickname) ||
+        teamMembers[1].find( i => i == nickname)) {
+            return true
+    }
+    return false
+}
+
+const isRoomValid = function(roomName) {
+    if (roomData[roomName]) {
+        return true
+    }
+    return false
 }
 
 var game = function(io) {
@@ -32,6 +57,16 @@ var game = function(io) {
         socket.on('joinGame', function(roomName, nickname) {
             console.log('joinGame');
             console.log(roomData[roomName]);
+            if (!isRoomValid()) {
+                console.log('INVALID ROOM NAME:' + roomName)
+                io.to(roomName).emit('invalid-room');
+                return
+            }
+            if (isDuplicateNickname(roomData[roomName].teamMembers, nickname)) {
+                console.log('DUPLICATE NICKNAME:' + nickname)
+                io.to(roomName).emit('duplciate-nickname');
+                return
+            }
             var teamIndex = addTeamMember(roomData[roomName].teamMembers, nickname)
             socket.join(roomName);
             console.log(roomData[roomName]);
@@ -60,15 +95,5 @@ var game = function(io) {
         })
     })
 }
-
-generateRandomString = function(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-       result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
- }
 
 module.exports = game;
