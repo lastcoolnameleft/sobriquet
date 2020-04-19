@@ -10,7 +10,7 @@ Vue.use(Vuex)
 
 Vue.use(new VueSocketIO({
   debug: false,
-  connection: 'http://localhost:3000',
+  connection: process.env.VUE_APP_SOCKET_URL
 }))
 
 new Vue({
