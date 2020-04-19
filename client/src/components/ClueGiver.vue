@@ -10,7 +10,7 @@
           </h5>
 
             </div>
-            <div class="timer" ></div>
+            <div class="timer" v-bind:style="{ 'animation-duration': timerLengthCss }" ></div>
             <div v-show="isRoundStarted && isActivePlayer(nickname)">
               <clue></clue>
               <div class="buttons-container">
@@ -50,6 +50,7 @@ export default {
     data() {
       return {
         timer: null,
+        timerLength: process.env.VUE_APP_TIMER_LENGTH,
         foo: ''
       }
     },
@@ -58,6 +59,8 @@ export default {
         'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay', 'team1Score', 'team2Score',
         'getState', 'getRoomName'
       ]),
+      timerLengthCss() { return this.timerLength + 's' },
+      timerLengthJs() { return this.timerLength * 1000 },
     },
     methods: {
       ...mapActions([ 'cardSuccess', 'cardPass', 'endTurn' ]),
@@ -82,7 +85,7 @@ export default {
       this.timer = setTimeout(function() {
         console.log('TIMER COMPLETE')
         this.endTurn()
-      }.bind(this), 60000)
+      }.bind(this), this.timerLengthJs)
       console.log('TIMER CREATED')
     },
     beforeDestroy () {

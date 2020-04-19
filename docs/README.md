@@ -9,6 +9,8 @@ docker push lastcoolnameleft/sobriquet
 
 ```sh
 docker kill sobriquet
-sudo docker pull lastcoolnameleft/sobriquet
-sudo docker run --name sobriquet -p 8080:3000 -it --rm lastcoolnameleft/sobriquet
+docker rm sobriquet
+docker pull lastcoolnameleft/sobriquet
+docker run --name sobriquet -p 8080:3000 -it --rm lastcoolnameleft/sobriquet
+docker run --name sobriquet -p 8080:3000 -it lastcoolnameleft/sobriquet
 ```

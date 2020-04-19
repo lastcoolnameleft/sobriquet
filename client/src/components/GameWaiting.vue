@@ -1,6 +1,22 @@
 <template>
       <div class="wrapper">
         <img class="logo" src="../assets/Monikers_logo_lockup-02.svg" alt="Monikers logo" />
+        <h2 class="game-setup-headline">Join Game</h2>
+          <h3 class="label-name">Game Code</h3>
+          <input v-model='roomName'
+            class="input-field"
+            type="text"
+            name="roomName"
+            value=""
+          />
+          <h3 class="label-name">Your Nickname</h3>
+          <input v-model='nicknameJoin'
+            class="input-field"
+            type="text"
+            name="nickname"
+            value="tommy"
+          />
+          <button v-on:click="clickedJoinGame" class="start-button" >JOIN GAME</button>
         <h2 class="game-setup-headline">Create Game</h2>
           <h3 class="label-name">Team One (Your Team)</h3>
           <input v-model='team1Name'
@@ -35,22 +51,6 @@
             value="tommy"
           />
           <button v-on:click="clickedCreateGame" class="start-button" >CREATE GAME</button>
-        <h2 class="game-setup-headline">Join Game</h2>
-          <h3 class="label-name">Game Code</h3>
-          <input v-model='roomName'
-            class="input-field"
-            type="text"
-            name="roomName"
-            value=""
-          />
-          <h3 class="label-name">Your Nickname</h3>
-          <input v-model='nicknameJoin'
-            class="input-field"
-            type="text"
-            name="nickname"
-            value="tommy"
-          />
-          <button v-on:click="clickedJoinGame" class="start-button" >JOIN GAME</button>
     </div>
 
 </template>

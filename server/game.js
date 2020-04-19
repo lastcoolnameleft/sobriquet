@@ -57,7 +57,7 @@ var game = function(io) {
         socket.on('joinGame', function(roomName, nickname) {
             console.log('joinGame');
             console.log(roomData[roomName]);
-            if (!isRoomValid()) {
+            if (!isRoomValid(roomName)) {
                 console.log('INVALID ROOM NAME:' + roomName)
                 io.to(roomName).emit('invalid-room');
                 return

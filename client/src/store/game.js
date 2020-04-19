@@ -79,6 +79,7 @@ var store = new Vuex.Store({
         },
           endRound({commit, getters, state, dispatch}) {
             console.log('actions.endRound()')
+            commit('nextPlayer')
             commit('setRoundState', 'complete')
             commit('setTurnState', 'complete')
             commit('incrementActiveRoundIndex')
@@ -106,6 +107,7 @@ var store = new Vuex.Store({
         endTurn({commit}) {
           console.log('actions.endTurn')
           commit('setTurnState', 'complete')
+          commit('nextPlayer')
           commit('swapActiveTeam')
           commit('moveActiveCardToBottom')
         },

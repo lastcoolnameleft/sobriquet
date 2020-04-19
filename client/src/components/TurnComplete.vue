@@ -9,7 +9,17 @@
           </h5>
         </div>
         <div class="team-transition">
-          <h2 class="current-team-headline" style="{ color: '#00B4EF' };">
+          <div v-if="isActiveTeam(nickname)">
+            <h3 class="current-team-headline">
+              It's your team's turn
+            </h3>
+          </div>
+          <div v-if="!isActiveTeam(nickname)">
+            <h3 class="inactive-team-headline">
+              It's NOT your team's turn
+            </h3>
+          </div>
+          <h2 class="current-team-headline">
             It's {{activePlayerName}} turn
           </h2>
           <p class="remaining-cards">
@@ -46,7 +56,7 @@ export default {
     computed: {
       ...mapGetters([
         'team1Score', 'team2Score', 'activePlayerName', 'isActivePlayer', 'numberOfCardsLeftInPlay',
-        'getState'
+        'getState', 'isActiveTeam'
       ]),
     },
 }
@@ -90,6 +100,12 @@ export default {
 
 .current-team-headline {
   color: #00B4EF;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.inactive-team-headline {
+  color: rgb(239, 0, 44);
   text-align: center;
   font-size: 2rem;
 }

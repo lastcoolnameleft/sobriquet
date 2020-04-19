@@ -4,9 +4,17 @@
         <h2 class="game-setup-headline">Welcome to the Lobby</h2>
         <h2 class="game-setup-headline">Tell your friends to join with the code: <b>{{ $store.state.roomName}}</b></h2>
         <h3 class="label-name">{{ team1Name }} Members:</h3>
-        {{ team1MemberString }} 
+          <ul id="team1-members">
+            <li v-for="member in team1Members" :key="member">
+              {{ member}}
+            </li>
+          </ul>
         <h3 class="label-name">{{ team2Name }} Members:</h3>
-        {{ team2MemberString }} 
+          <ul id="team2-members">
+            <li v-for="member in team2Members" :key="member">
+              {{ member}}
+            </li>
+          </ul>
        <button v-show="isHost" v-on:click="clickedStartGame" class="start-button" >START GAME</button>
     </div>
 </template>
@@ -30,12 +38,6 @@ export default {
       ...mapGetters([
           'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name', 'getState'
       ]),
-      team1MemberString() {
-        return this.team1Members.join('</br>')
-      },
-      team2MemberString() {
-        return this.team2Members.join('</br>')
-      },
     },
     methods: {
         ...mapMutations([ 'startGame' ]),
