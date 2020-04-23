@@ -1,6 +1,7 @@
 <template>
     <div>
-        <TurnComplete v-if="isTurnComplete" :nickname="nickname" :eventBus="eventBus"></TurnComplete>
+        <Error v-if="errorData.type" :errorData="errorData"></Error>
+        <TurnComplete v-else-if="isTurnComplete" :nickname="nickname" :eventBus="eventBus"></TurnComplete>
         <RoundWaiting v-else-if="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
         <GameComplete v-else-if="isGameComplete" :eventBus="eventBus"></GameComplete>
         <RoundComplete v-else-if="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
@@ -20,13 +21,30 @@ import GameComplete from './GameComplete'
 import RoundComplete from './RoundComplete'
 import TurnComplete from './TurnComplete'
 import Lobby from './Lobby'
+import Error from './Error'
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, TurnComplete, Lobby },
+    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, TurnComplete, Lobby, Error },
     sockets: {
-        connect: function () {
-            console.log('APP:socket connected')
+        connect: function (reason) {
+            console.log('APP:socket connected::' + reason)
+        },
+        error: function (reason) {
+            console.log('APP:socket error::' + reason)
+        },
+        disconnect: function (reason) {
+            console.log('APP:socket disconnect::' + reason)
+            this.errorData = { type: 'Disconnect', description: reason }
+        },
+        reconnect: function (reason) {
+            console.log('APP:socket reconnect::' + reason)
+        },
+        reconnecting: function (reason) {
+            console.log('APP:socket reconnecting::' + reason)
+        },
+        connecting: function (reason) {
+            console.log('APP:socket connecting::' + reason)
         },
         gameCreated: function(roomName) {
             this.updateRoom(roomName)
@@ -42,15 +60,12 @@ export default {
         customEmit: function () {
             console.log('APP:this method was fired by the socket server. eg: io.emit("customEmit", data)')
         },
-        reconnect: function () {
-            console.log('APP:socket RECONNECTED')
-        },
-
     },
     data() {
         return {
             eventBus,
             nickname: '',
+            errorData: {},
         }
     },
     methods: {

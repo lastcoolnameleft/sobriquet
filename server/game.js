@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var debug = require('debug')('game:socket');
 var roomData = {};
-
+var socketData = {};
 
 const addTeamMember = function(teamMembers, nickname) {
   var teamIndex = 0
@@ -10,6 +10,19 @@ const addTeamMember = function(teamMembers, nickname) {
   }
   teamMembers[teamIndex].push(nickname)
   return teamIndex
+}
+
+var removeTeamMember = function(teamMembers, nickname) {
+    console.log('removeTeamMeber::' + nickname)
+    var i
+    if (teamMembers[0].indexOf(nickname) > -1) {
+        teamMembers[0].splice(teamMembers[0].indexOf(nickname), 1)
+    } else if (teamMembers[1].find( i => i == nickname)) {
+        teamMembers[1].splice(teamMembers[1].indexOf(nickname), 1)
+    } else {
+        console.log('Unable to find ' + nickname)
+    }
+    return teamMembers
 }
 
 const generateRandomString = function(length) {
@@ -42,12 +55,13 @@ var game = function(io) {
 
         console.log('connection::' + socket.id)
 
-        socket.on('createGame', function(gameData) {
+        socket.on('createGame', function(gameData, nickname) {
             console.log('createGame::' + socket.id);
             console.log(gameData);
             var roomName = generateRandomString(4)
             gameData.roomName = roomName
             roomData[roomName] = gameData;
+            socketData[socket.id] = { roomName, nickname };
             socket.join(roomName);
             //console.log(roomData[roomName]);
             io.to(roomName).emit('gameCreated', roomName);
@@ -67,7 +81,8 @@ var game = function(io) {
                 io.to(roomName).emit('duplciate-nickname');
                 return
             }
-            var teamIndex = addTeamMember(roomData[roomName].teamMembers, nickname)
+            addTeamMember(roomData[roomName].teamMembers, nickname)
+            socketData[socket.id] = { roomName, nickname };
             socket.join(roomName);
             console.log(roomData[roomName]);
             io.to(roomName).emit('gameData', roomData[roomName]);
@@ -95,6 +110,17 @@ var game = function(io) {
         })
         socket.on('disconnect', (reason) => {
             console.log('disconnect::' + socket.id + '::' + reason);
+            console.log(roomData);
+            console.log(socketData);
+            if (!socketData[socket.id]) {
+                console.log('Unable to find socketData.  Zombie connection.')
+                return
+            }
+            const nickname = socketData[socket.id].nickname
+            const roomName = socketData[socket.id].roomName
+            const teamMembers = roomData[roomName].teamMembers
+            removeTeamMember(teamMembers, nickname) 
+            io.to(roomName).emit('gameData', roomData[roomName]);
         });
         socket.on('error', (reason) => {
             console.log('error::' + socket.id + '::' + reason);

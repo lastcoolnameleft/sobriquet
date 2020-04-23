@@ -4,7 +4,7 @@
         <h2 class="game-setup-headline">Join Game</h2>
           <h3 class="label-name">Game Code</h3>
           <input v-model='roomName'
-            class="input-field"
+            class="input-field uppercase"
             type="text"
             name="roomName"
             value=""
@@ -92,7 +92,7 @@ export default {
               numCards: this.numCards,
               nickname: this.nicknameCreate })
           console.log(this.getState)
-          this.$socket.emit("createGame", this.getState);
+          this.$socket.emit("createGame", this.getState, this.nicknameCreate);
         },
     },
     computed: {
@@ -124,6 +124,10 @@ export default {
   border-radius: 5px;
   border: 1px solid #FFF;
   background-color: #fff;
+  text-transform: uppercase;
+}
+
+.uppercase {
   text-transform: uppercase;
 }
 
