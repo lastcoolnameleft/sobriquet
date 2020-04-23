@@ -69,7 +69,7 @@ var game = function(io) {
         })
 
         socket.on('joinGame', function(roomName, nickname) {
-            console.log('joinGame' + socket.id);
+            console.log('joinGame::' + socket.id);
             console.log(roomData[roomName]);
             if (!isRoomValid(roomName)) {
                 console.log('INVALID ROOM NAME:' + roomName)
@@ -89,23 +89,27 @@ var game = function(io) {
         })
 
         socket.on('startGame', function(gameData) {
-            console.log('startGame' + socket.id);
+            console.log('startGame::' + socket.id);
             console.log(gameData);
+            roomData[gameData.roomName] = gameData;
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('startRound', function(gameData) {
-            console.log('startRound' + socket.id);
+            console.log('startRound::' + socket.id);
             console.log(gameData);
+            roomData[gameData.roomName] = gameData;
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('startTurn', function(gameData) {
-            console.log('startTurn' + socket.id);
+            console.log('startTurn::' + socket.id);
             console.log(gameData);
+            roomData[gameData.roomName] = gameData;
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('updateScore', function(gameData) {
             console.log('updateScore::' + socket.id);
             console.log(gameData);
+            roomData[gameData.roomName] = gameData;
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('disconnect', (reason) => {
