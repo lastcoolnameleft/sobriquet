@@ -40,10 +40,10 @@ const isRoomValid = function(roomName) {
 var game = function(io) {
     io.on('connection', (socket) => {
 
-        console.log('connection!!')
+        console.log('connection::' + socket.id)
 
         socket.on('createGame', function(gameData) {
-            console.log('createGame');
+            console.log('createGame::' + socket.id);
             console.log(gameData);
             var roomName = generateRandomString(4)
             gameData.roomName = roomName
@@ -55,7 +55,7 @@ var game = function(io) {
         })
 
         socket.on('joinGame', function(roomName, nickname) {
-            console.log('joinGame');
+            console.log('joinGame' + socket.id);
             console.log(roomData[roomName]);
             if (!isRoomValid(roomName)) {
                 console.log('INVALID ROOM NAME:' + roomName)
@@ -74,25 +74,34 @@ var game = function(io) {
         })
 
         socket.on('startGame', function(gameData) {
-            console.log('startGame');
+            console.log('startGame' + socket.id);
             console.log(gameData);
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('startRound', function(gameData) {
-            console.log('startRound');
+            console.log('startRound' + socket.id);
             console.log(gameData);
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('startTurn', function(gameData) {
-            console.log('startTurn');
+            console.log('startTurn' + socket.id);
             console.log(gameData);
             io.to(gameData.roomName).emit('gameData', gameData);
         })
         socket.on('updateScore', function(gameData) {
-            console.log('updateScore');
+            console.log('updateScore::' + socket.id);
             console.log(gameData);
             io.to(gameData.roomName).emit('gameData', gameData);
         })
+        socket.on('disconnect', (reason) => {
+            console.log('disconnect::' + socket.id + '::' + reason);
+        });
+        socket.on('error', (reason) => {
+            console.log('error::' + socket.id + '::' + reason);
+        });
+        socket.on('disconnecting', (reason) => {
+            console.log('disconnecting::' + socket.id + '::' + reason);
+        });
     })
 }
 

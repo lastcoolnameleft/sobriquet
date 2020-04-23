@@ -81,7 +81,7 @@ export default {
         clickedJoinGame() {
           console.log('GameWaiting.joinGame()')
           this.eventBus.$emit('set-nickname', this.nicknameJoin)
-          this.$socket.emit('joinGame', this.roomName, this.nicknameJoin);
+          this.$socket.emit('joinGame', this.roomName.toUpperCase(), this.nicknameJoin);
         },
         clickedCreateGame() {
           console.log('GameWaiting.createGame()')
