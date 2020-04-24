@@ -218,12 +218,27 @@ class Game {
 
 
     removeTeamMember(nickname) {
-        console.log('removeTeamMeber::' + nickname)
+        console.log(`removeTeamMeber(${nickname}`)
         var i
         if (this.teamMembers[0].indexOf(nickname) > -1) {
+            // Found them in team 1
             this.teamMembers[0].splice(this.teamMembers[0].indexOf(nickname), 1)
-        } else if (this.teamMembers[1].find( i => i == nickname)) {
+
+            // If we removed the last player, start at beginning
+            if (this.activePlayerIndex[0] >= this.teamMembers[0].length ) {
+                console.log('Removed last player for team 1.  resetting active player index')
+                this.activePlayerIndex[0] = 0
+            } 
+
+        } else if (this.teamMembers[1].indexOf(nickname) > -1) {
+            // Found them in team 2
             this.teamMembers[1].splice(this.teamMembers[1].indexOf(nickname), 1)
+
+            // If we removed the last player, start at beginning
+            if (this.activePlayerIndex[1] >= this.teamMembers[1].length ) {
+                console.log('Removed last player for team 2.  resetting active player index')
+                this.activePlayerIndex[1] = 0
+            } 
         } else {
             console.log('Unable to find ' + nickname)
         }
