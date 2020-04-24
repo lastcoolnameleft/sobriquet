@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'Lobby',
@@ -40,7 +40,6 @@ export default {
       ]),
     },
     methods: {
-        ...mapMutations([ 'startGame' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         clickedStartGame() {

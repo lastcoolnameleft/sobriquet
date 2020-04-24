@@ -46,9 +46,6 @@ export default {
         connecting: function (reason) {
             console.log('APP:socket connecting::' + reason)
         },
-        updateTeamMembers: function(teamMembers) {
-            this.updateTeamMembers(teamMembers)
-        },
         gameData: function(data) {
             console.log('APP:game data')
             console.log(data)
@@ -66,7 +63,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([ 'updateRoom', 'updateTeamMembers', 'setStore' ]),
+        ...mapActions([ 'updateRoom', 'setStore' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         startGame() {

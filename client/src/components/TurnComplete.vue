@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
     props: {
         eventBus: {
@@ -47,7 +47,6 @@ export default {
         },
     },
     methods: {
-      ...mapActions([ 'startTurn' ]),
         clickedStartTurn() {
             this.$socket.emit('startTurn', this.getState);
         },

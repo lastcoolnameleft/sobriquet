@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
     props: {
         eventBus: {
@@ -75,7 +75,6 @@ export default {
       }
     },
     methods: {
-        ...mapActions([ 'createGame' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         clickedJoinGame() {

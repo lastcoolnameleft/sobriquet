@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import Clue from './Clue'
 
 export default {
@@ -56,14 +56,12 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'activeCard', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'isActivePlayer', 'numberOfCardsLeftInPlay', 'team1Score', 'team2Score',
-        'getState', 'getRoomName'
+        'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score',
       ]),
       timerLengthCss() { return this.timerLength + 's' },
       timerLengthJs() { return this.timerLength * 1000 },
     },
     methods: {
-      ...mapActions([ 'cardSuccess', 'cardPass', 'endTurn' ]),
         // Score points for that team (TBD) and draw a new card
         // Add the index of the card to the "scoredCardIndex"
         clickedSuccess() {
@@ -73,15 +71,11 @@ export default {
         clickedPass() {
           this.$socket.emit('cardPass');
         },
-        log() {
-          console.log('TIMER')
-        },
     },
     created: function() {
       this.timer = setTimeout(function() {
         console.log('TIMER COMPLETE')
         this.$socket.emit('endTurn');
-        this.endTurn()
       }.bind(this), this.timerLengthJs)
       console.log('TIMER CREATED')
     },
