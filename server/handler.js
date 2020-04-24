@@ -11,16 +11,6 @@ const isRoomValid = function(roomName) {
     return false
 }
 
-const playerDisconnect = function(socketId) {
-    if (!socketData[socketId]) {
-        console.log('Unable to find socketData.  Zombie connection.')
-        return
-    }
-    const nickname = socketData[socketId].nickname
-    const roomName = socketData[socketId].roomName
-    roomData[roomName].removeTeamMember(nickname) 
-}
-
 const getGameFromSocketId = function(socketId) {
     return roomData[socketData[socketId].roomName]
 }
@@ -48,7 +38,7 @@ var handler = function(io) {
             if (!isRoomValid(roomName)) {
                 console.log('INVALID ROOM NAME:' + roomName)
                 io.to(roomName).emit('invalid-room');
-                
+                return
             }
             if (game.isDuplicateNickname(nickname)) {
                 console.log('DUPLICATE NICKNAME:' + nickname)
