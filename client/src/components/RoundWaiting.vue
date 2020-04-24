@@ -44,7 +44,6 @@ export default {
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         clickedStartRound() {
-          this.startRound()
           this.$socket.emit("startRound", this.getState);
         },
     },

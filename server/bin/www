@@ -23,8 +23,8 @@ var server = http.createServer(app);
 
 // Add Sockets
 var io = require('socket.io')(server);
-var game = require('../game');
-game(io)
+var handler = require('../handler');
+handler(io)
 
 /**
  * Listen on provided port, on all network interfaces.

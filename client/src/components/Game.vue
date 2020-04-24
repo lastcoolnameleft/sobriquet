@@ -46,9 +46,6 @@ export default {
         connecting: function (reason) {
             console.log('APP:socket connecting::' + reason)
         },
-        gameCreated: function(roomName) {
-            this.updateRoom(roomName)
-        },
         updateTeamMembers: function(teamMembers) {
             this.updateTeamMembers(teamMembers)
         },

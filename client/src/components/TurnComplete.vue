@@ -49,7 +49,6 @@ export default {
     methods: {
       ...mapActions([ 'startTurn' ]),
         clickedStartTurn() {
-            this.startTurn()
             this.$socket.emit('startTurn', this.getState);
         },
     },

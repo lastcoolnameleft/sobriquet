@@ -86,13 +86,7 @@ export default {
         clickedCreateGame() {
           console.log('GameWaiting.createGame()')
           this.eventBus.$emit('set-nickname', this.nicknameCreate)
-          this.createGame({ 
-              team1Name: this.team1Name,
-              team2Name: this.team2Name,
-              numCards: this.numCards,
-              nickname: this.nicknameCreate })
-          console.log(this.getState)
-          this.$socket.emit("createGame", this.getState, this.nicknameCreate);
+          this.$socket.emit("createGame", this.team1Name, this.team2Name, this.numCards, this.nicknameCreate);
         },
     },
     computed: {

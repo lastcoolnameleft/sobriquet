@@ -139,9 +139,6 @@ var store = new Vuex.Store({
         }
 
       },
-      setActiveTeamIndex(state, newActiveTeamIndex) {
-        state.activeTeamIndex = newActiveTeamIndex
-      },
 
       swapActiveTeam(state) {
         console.log('mutation.swapActiveTeam')

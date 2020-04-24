@@ -64,18 +64,14 @@ export default {
     },
     methods: {
       ...mapActions([ 'cardSuccess', 'cardPass', 'endTurn' ]),
-        clueGiverTimeout() {
-            this.eventBus.$emit('clue-giver-timeout')
-        },
         // Score points for that team (TBD) and draw a new card
         // Add the index of the card to the "scoredCardIndex"
         clickedSuccess() {
           console.log('ClueGiver.clickedSuccess()')
-          this.cardSuccess()
-          this.$socket.emit('updateScore', this.getState);
+          this.$socket.emit('cardSuccess');
         },
         clickedPass() {
-          this.cardPass()
+          this.$socket.emit('cardPass');
         },
         log() {
           console.log('TIMER')
@@ -84,6 +80,7 @@ export default {
     created: function() {
       this.timer = setTimeout(function() {
         console.log('TIMER COMPLETE')
+        this.$socket.emit('endTurn');
         this.endTurn()
       }.bind(this), this.timerLengthJs)
       console.log('TIMER CREATED')
