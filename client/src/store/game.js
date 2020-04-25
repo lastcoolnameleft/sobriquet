@@ -12,6 +12,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 var store = new Vuex.Store({
   state: {
+      nickname: '',
       roomName: '',
       host: '',
       
@@ -48,10 +49,17 @@ var store = new Vuex.Store({
           console.log('actions.setStore')
           commit('setStore', newState)
         },
+        setNickname({commit}, nickname) {
+          console.log('actions.setNickname')
+          commit('setNickname', nickname)
+        }
     },
     mutations: {
       setStore(state, newState) {
         state = Object.assign(state, newState)
+      },
+      setNickname(state, nickname) {
+        state.nickname = nickname
       },
     },
     getters: {
@@ -67,12 +75,14 @@ var store = new Vuex.Store({
       activePlayerName(state) {
         return state.teamMembers[state.activeTeamIndex][state.activePlayerIndex[state.activeTeamIndex]]
       },
-      isActiveTeam: (state) => (nickname) => {
-        return state.teamMembers[state.activeTeamIndex].includes(nickname)
+      isActiveTeam: state => {
+        return state.teamMembers[state.activeTeamIndex].includes(state.nickname)
       },
-      isActivePlayer: (state, getters) => (nickname) => {
-        console.log('isActivePlayer(' + nickname + ')::activePlayerName=' + getters.activePlayerName)
-        return nickname === getters.activePlayerName
+      isActivePlayer: (state, getters) => {
+        return state.nickname === getters.activePlayerName
+      },
+      isHost: state => {
+        return state.host == state.nickname
       },
       isGameStarted: state => {
           return state.gameState === 'started'

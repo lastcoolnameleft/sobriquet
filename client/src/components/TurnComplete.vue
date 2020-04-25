@@ -9,12 +9,12 @@
           </h5>
         </div>
         <div class="team-transition">
-          <div v-if="isActiveTeam(nickname)">
+          <div v-if="isActiveTeam">
             <h3 class="current-team-headline">
               It's your team's turn
             </h3>
           </div>
-          <div v-if="!isActiveTeam(nickname)">
+          <div v-if="!isActiveTeam">
             <h3 class="inactive-team-headline">
               It's NOT your team's turn
             </h3>
@@ -26,7 +26,7 @@
             {{numberOfCardsLeftInPlay}} Cards Remaining
           </p>
           <div class="dashed-line-next" />
-          <button class="start-turn-button" v-show="isActivePlayer(nickname)" v-on:click="clickedStartTurn">
+          <button class="start-turn-button" v-show="isActivePlayer" v-on:click="clickedStartTurn">
             START
           </button>
         </div>

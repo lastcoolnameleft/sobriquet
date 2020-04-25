@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 export default {
     props: {
         eventBus: {
@@ -75,16 +75,17 @@ export default {
       }
     },
     methods: {
+        ...mapActions([ 'setNickname' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         clickedJoinGame() {
           console.log('GameWaiting.joinGame()')
-          this.eventBus.$emit('set-nickname', this.nicknameJoin)
+          this.setNickname(this.nicknameJoin)
           this.$socket.emit('joinGame', this.roomName.toUpperCase(), this.nicknameJoin);
         },
         clickedCreateGame() {
           console.log('GameWaiting.createGame()')
-          this.eventBus.$emit('set-nickname', this.nicknameCreate)
+          this.setNickname(this.nicknameCreate)
           this.$socket.emit("createGame", this.team1Name, this.team2Name, this.numCards, this.nicknameCreate);
         },
     },

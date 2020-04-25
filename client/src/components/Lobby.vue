@@ -29,14 +29,11 @@ export default {
             type: Object,
             required: true
         },
-        isHost: {
-            type: Boolean,
-            required: true
-        },
     },
     computed: {
       ...mapGetters([
-          'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name', 'getState'
+          'roomName', 'team1Members', 'team2Members', 'team1Name',
+          'team2Name', 'getState', 'isHost'
       ]),
     },
     methods: {

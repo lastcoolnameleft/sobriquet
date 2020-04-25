@@ -11,7 +11,7 @@
 
             </div>
             <div class="timer" v-bind:style="{ 'animation-duration': timerLengthCss }" ></div>
-            <div v-show="isRoundStarted && isActivePlayer(nickname)">
+            <div v-show="isRoundStarted && isActivePlayer">
               <clue></clue>
               <div class="buttons-container">
                 <button

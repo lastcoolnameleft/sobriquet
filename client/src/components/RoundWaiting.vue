@@ -13,14 +13,14 @@
           <div class="dashed-line" />
           <p class="round-description">{{activeRoundDescription}}</p>
           <div class="dashed-line" />
-          <h3 :class="[isActiveTeam(nickname) ? 'active-team' : 'inactive-team']">
+          <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
             <div>Starting Team:</div>
-            <div>{{activeTeamName}} ({{isActiveTeam(nickname) ? 'Yours' : 'Theirs'}})</div>
+            <div>{{activeTeamName}} ({{isActiveTeam ? 'Yours' : 'Theirs'}})</div>
           </h3>
-          <h3 :class="[isActiveTeam(nickname) ? 'active-team' : 'inactive-team']">
+          <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
             <div>Starting Player: {{activePlayerName}}</div>
           </h3>
-          <button v-show="isActivePlayer(nickname)" v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
+          <button v-show="isActivePlayer" v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
         </div>
       </div>
 

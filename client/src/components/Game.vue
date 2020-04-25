@@ -6,7 +6,7 @@
         <GameComplete v-else-if="isGameComplete" :eventBus="eventBus"></GameComplete>
         <RoundComplete v-else-if="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <GameWaiting v-else-if="isGameWaiting" :eventBus="eventBus"></GameWaiting>
-        <Lobby v-else-if="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
+        <Lobby v-else-if="isGameCreated" :eventBus="eventBus"></Lobby>
         <ClueGiver v-else-if="isTurnStarted" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
     </div>
 </template>
@@ -76,9 +76,6 @@ export default {
             'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete',
             'isGameCreated', 'isTurnStarted', 'host', 'isTurnComplete'
         ]),
-        isHost() {
-            return this.$store.state.host == this.nickname
-        },
     },
 
     // These functions mostly route messages from the global event bus to the local functions
