@@ -20,7 +20,7 @@
             </h3>
           </div>
           <h2 class="current-team-headline">
-            It's {{activePlayerName}} turn
+            It's {{activePlayerName}}'s turn
           </h2>
           <p class="remaining-cards">
             {{numberOfCardsLeftInPlay}} Cards Remaining
@@ -39,10 +39,6 @@ export default {
     props: {
         eventBus: {
             type: Object,
-            required: true
-        },
-        nickname: {
-            type: String,
             required: true
         },
     },

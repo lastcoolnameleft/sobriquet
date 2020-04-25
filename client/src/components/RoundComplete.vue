@@ -33,10 +33,6 @@ export default {
             type: Object,
             required: true
         },
-        nickname: {
-            type: String,
-            required: true
-        },
     },
     methods: {
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"

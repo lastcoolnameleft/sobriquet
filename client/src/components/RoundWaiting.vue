@@ -35,10 +35,6 @@ export default {
             type: Object,
             required: true
         },
-        nickname: {
-            type: String,
-            required: true
-        },
     },
     methods: {
         ...mapActions([ 'startRound' ]),

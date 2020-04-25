@@ -1,20 +1,20 @@
 <template>
     <div>
         <Error v-if="errorData.type" :errorData="errorData"></Error>
-        <TurnComplete v-else-if="isTurnComplete" :nickname="nickname" :eventBus="eventBus"></TurnComplete>
-        <RoundWaiting v-else-if="isRoundWaiting" :nickname="nickname" :eventBus="eventBus"></RoundWaiting>
+        <TurnComplete v-else-if="isTurnComplete" :eventBus="eventBus"></TurnComplete>
+        <RoundWaiting v-else-if="isRoundWaiting" :eventBus="eventBus"></RoundWaiting>
         <GameComplete v-else-if="isGameComplete" :eventBus="eventBus"></GameComplete>
-        <RoundComplete v-else-if="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
+        <RoundComplete v-else-if="isRoundComplete" :eventBus="eventBus"></RoundComplete>
         <GameWaiting v-else-if="isGameWaiting" :eventBus="eventBus"></GameWaiting>
         <Lobby v-else-if="isGameCreated" :eventBus="eventBus"></Lobby>
-        <ClueGiver v-else-if="isTurnStarted" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
+        <TurnStarted v-else-if="isTurnStarted" :eventBus="eventBus"></TurnStarted>
     </div>
 </template>
 
 <script>
 var eventBus = new Vue()
 import Vue from 'vue'
-import ClueGiver from './ClueGiver'
+import TurnStarted from './TurnStarted'
 import GameWaiting from './GameWaiting'
 import RoundWaiting from './RoundWaiting'
 import GameComplete from './GameComplete'
@@ -25,7 +25,7 @@ import Error from './Error'
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-    components: { ClueGiver, GameWaiting, RoundWaiting, RoundComplete, GameComplete, TurnComplete, Lobby, Error },
+    components: { TurnStarted, GameWaiting, RoundWaiting, RoundComplete, GameComplete, TurnComplete, Lobby, Error },
     sockets: {
         connect: function (reason) {
             console.log('APP:socket connected::' + reason)
@@ -58,7 +58,6 @@ export default {
     data() {
         return {
             eventBus,
-            nickname: '',
             errorData: {},
         }
     },
@@ -74,15 +73,8 @@ export default {
     computed: {
         ...mapGetters([
             'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete',
-            'isGameCreated', 'isTurnStarted', 'host', 'isTurnComplete'
+            'isGameCreated', 'isTurnStarted', 'host', 'isTurnComplete', 'isActivePlayer'
         ]),
     },
-
-    // These functions mostly route messages from the global event bus to the local functions
-    mounted() {
-        this.eventBus.$on('set-nickname', nickname => (
-            this.nickname = nickname
-        ))
-    }
 }
 </script>

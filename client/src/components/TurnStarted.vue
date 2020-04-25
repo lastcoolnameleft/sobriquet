@@ -2,16 +2,15 @@
         <div class="background-image">
           <div class="play">
             <div class="game-info-container">
-          <h5 class="scores blue">
-            Team #1 : {{team1Score}}
-          </h5>
-          <h5 class="scores purple">
-            Team #2 : {{team2Score}}
-          </h5>
-
+              <h5 class="scores blue">
+                Team #1 : {{team1Score}}
+              </h5>
+              <h5 class="scores purple">
+                Team #2 : {{team2Score}}
+              </h5>
             </div>
             <div class="timer" v-bind:style="{ 'animation-duration': timerLengthCss }" ></div>
-            <div v-show="isRoundStarted && isActivePlayer">
+            <div v-if="isRoundStarted && isActivePlayer">
               <clue></clue>
               <div class="buttons-container">
                 <button
@@ -25,7 +24,26 @@
                   Success!
                 </button>
               </div>
-
+            </div>
+            <div v-else-if="isActiveTeam">
+              <div class="round-transition">
+                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                    <div>It's your team's turn!</div>
+                </h3>
+                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                    <div>STOP PAYING ATTENTION TO THE SCREEN AND GUESS!</div>
+                </h3>
+              </div>
+            </div>
+            <div v-else>
+              <div class="round-transition">
+                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                    <div>It's NOT your team's turn!</div>
+                </h3>
+                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                    <div>NO GUESSING</div>
+                </h3>
+              </div>
             </div>
           </div>
     </div>
@@ -52,7 +70,7 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score',
+        'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score', 'isActiveTeam'
       ]),
       timerLengthCss() { return this.timerLength + 's' },
       timerLengthJs() { return this.timerLength * 1000 },
@@ -373,4 +391,39 @@ export default {
   font-weight: 600;
 }
 
+.round-transition {
+  width: 85%;
+  margin: 40px auto 25px auto;
+  background-color: #FFF;
+  background-size: 75%;
+  border-radius: 15px;
+  padding: 20px 20px 40px 20px;
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+  box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.37);
+}
+
+.round-headline {
+  color: #555;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.active-team {
+  color: #00B4EF;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.inactive-team {
+  color: rgb(239, 0, 0);
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.round-description {
+  color: #555;
+  font-size: 1rem;
+  text-align: center;
+}
 </style>
