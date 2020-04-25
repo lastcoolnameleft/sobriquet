@@ -13,11 +13,12 @@
           <div class="dashed-line" />
           <p class="round-description">{{activeRoundDescription}}</p>
           <div class="dashed-line" />
-          <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            {{activeTeamName}} Starts
+          <h3 :class="[isActiveTeam(nickname) ? 'active-team' : 'inactive-team']">
+            <div>Starting Team:</div>
+            <div>{{activeTeamName}} ({{isActiveTeam(nickname) ? 'Yours' : 'Theirs'}})</div>
           </h3>
-          <h3 class="starting-team" style="{ color: '#00B4EF' };">
-            {{activePlayerName}} Starts
+          <h3 :class="[isActiveTeam(nickname) ? 'active-team' : 'inactive-team']">
+            <div>Starting Player: {{activePlayerName}}</div>
           </h3>
           <button v-show="isActivePlayer(nickname)" v-on:click="clickedStartRound" class="start-round-button" >START ROUND</button>
         </div>
@@ -26,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     props: {
@@ -40,16 +41,19 @@ export default {
         },
     },
     methods: {
+        ...mapActions([ 'startRound' ]),
         // To start the game, shuffle the full deck of cards, pick random ones and then set aside which cards are "Selected"
         // The Selected cards are now "In Play".
         clickedStartRound() {
+          this.startRound()
           this.$socket.emit("startRound", this.getState);
         },
     },
     computed: {
       ...mapGetters([
-        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription', 'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState', 'isActivePlayer',
-        'roomName', 'getState'
+        'team1Score', 'team2Score', 'activeRoundName', 'activeRoundDescription',
+        'activeTeamName', 'activeTeamMembers', 'activePlayerName', 'getState',
+        'isActivePlayer', 'isActiveTeam', 'roomName', 'getState'
       ]),
     },
 }
@@ -85,8 +89,14 @@ export default {
   font-size: 2rem;
 }
 
-.starting-team {
+.active-team {
   color: #00B4EF;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.inactive-team {
+  color: rgb(239, 0, 0);
   text-align: center;
   font-size: 1.8rem;
 }

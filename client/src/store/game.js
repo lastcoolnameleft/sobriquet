@@ -101,7 +101,7 @@ var store = new Vuex.Store({
       isGameCreated: state => {
           return state.gameState === 'created'
       },
-      shouldGameDetailsBeVisible: state => {
+      isTurnStarted: state => {
           return state.gameState === 'started' && state.roundState === 'started' && state.turnState === 'started'
       },
       numberOfCardsLeftInPlay: state => {

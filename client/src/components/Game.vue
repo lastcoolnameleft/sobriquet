@@ -7,7 +7,7 @@
         <RoundComplete v-else-if="isRoundComplete" :nickname="nickname" :eventBus="eventBus"></RoundComplete>
         <GameWaiting v-else-if="isGameWaiting" :eventBus="eventBus"></GameWaiting>
         <Lobby v-else-if="isGameCreated" :eventBus="eventBus" :isHost="isHost"></Lobby>
-        <ClueGiver v-else-if="shouldGameDetailsBeVisible" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
+        <ClueGiver v-else-if="isTurnStarted" :eventBus="eventBus" :nickname="nickname"></ClueGiver>
     </div>
 </template>
 
@@ -73,7 +73,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete', 'isGameCreated', 'shouldGameDetailsBeVisible', 'host', 'isTurnComplete'
+            'isGameWaiting', 'isRoundWaiting', 'isRoundComplete', 'isGameComplete',
+            'isGameCreated', 'isTurnStarted', 'host', 'isTurnComplete'
         ]),
         isHost() {
             return this.$store.state.host == this.nickname
@@ -84,9 +85,6 @@ export default {
     mounted() {
         this.eventBus.$on('set-nickname', nickname => (
             this.nickname = nickname
-        )),
-        this.eventBus.$on('join-game', (roomName, nickname) => (
-            this.joinGame(roomName, nickname)
         ))
     }
 }
