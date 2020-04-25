@@ -27,20 +27,20 @@
             </div>
             <div v-else-if="isActiveTeam">
               <div class="round-transition">
-                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                <h3 class="active-team">
                     <div>It's your team's turn!</div>
                 </h3>
-                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                <h3 class="active-team">
                     <div>STOP PAYING ATTENTION TO THE SCREEN AND GUESS!</div>
                 </h3>
               </div>
             </div>
             <div v-else>
               <div class="round-transition">
-                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                <h3 class="inactive-team">
                     <div>It's NOT your team's turn!</div>
                 </h3>
-                <h3 :class="[isActiveTeam ? 'active-team' : 'inactive-team']">
+                <h3 class="inactive-team">
                     <div>NO GUESSING</div>
                 </h3>
               </div>
