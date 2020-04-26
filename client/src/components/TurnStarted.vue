@@ -70,7 +70,8 @@ export default {
     },
     computed: {
       ...mapGetters([
-        'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score', 'isActiveTeam'
+        'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score', 'isActiveTeam',
+        'numberOfCardsLeftInPlay'
       ]),
       timerLengthCss() { return this.timerLength + 's' },
       timerLengthJs() { return this.timerLength * 1000 },
@@ -79,22 +80,29 @@ export default {
         // Score points for that team (TBD) and draw a new card
         // Add the index of the card to the "scoredCardIndex"
         clickedSuccess() {
-          console.log('ClueGiver.clickedSuccess()')
+          console.log('clickedSuccess()')
           this.$socket.emit('cardSuccess');
+          if (this.numberOfCardsLeftInPlay == 0) {
+            clearTimeout(this.timer)
+          }
         },
         clickedPass() {
           this.$socket.emit('cardPass');
         },
     },
     created: function() {
-      this.timer = setTimeout(function() {
-        console.log('TIMER COMPLETE')
-        this.$socket.emit('endTurn');
-      }.bind(this), this.timerLengthJs)
-      console.log('TIMER CREATED')
+      if (this.isActivePlayer) {
+        this.timer = setTimeout(function() {
+          console.log('TIMER COMPLETE')
+          this.$socket.emit('endTurn');
+        }.bind(this), this.timerLengthJs)
+        console.log('TIMER CREATED')
+      }
     },
     beforeDestroy () {
-      clearTimeout(this.timer)
+      if (this.isActivePlayer) {
+        clearTimeout(this.timer)
+      }
     }
     
 }

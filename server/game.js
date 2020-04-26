@@ -218,29 +218,25 @@ class Game {
 
 
     removeTeamMember(nickname) {
-        console.log(`removeTeamMeber(${nickname}`)
-        var i
+        console.log(`removeTeamMeber(${nickname})`)
+        var foundTeamIndex = -1
         if (this.teamMembers[0].indexOf(nickname) > -1) {
-            // Found them in team 1
-            this.teamMembers[0].splice(this.teamMembers[0].indexOf(nickname), 1)
-
-            // If we removed the last player, start at beginning
-            if (this.activePlayerIndex[0] >= this.teamMembers[0].length ) {
-                console.log('Removed last player for team 1.  resetting active player index')
-                this.activePlayerIndex[0] = 0
-            } 
-
+            foundTeamIndex = 0
         } else if (this.teamMembers[1].indexOf(nickname) > -1) {
-            // Found them in team 2
-            this.teamMembers[1].splice(this.teamMembers[1].indexOf(nickname), 1)
-
-            // If we removed the last player, start at beginning
-            if (this.activePlayerIndex[1] >= this.teamMembers[1].length ) {
-                console.log('Removed last player for team 2.  resetting active player index')
-                this.activePlayerIndex[1] = 0
-            } 
+            foundTeamIndex = 1
         } else {
             console.log('Unable to find ' + nickname)
+        }
+
+        if (foundTeamIndex >= 0) {
+            // Found them in team 1
+            this.teamMembers[foundTeamIndex].splice(this.teamMembers[foundTeamIndex].indexOf(nickname), 1)
+
+            // If we removed the last player, start at beginning
+            if (this.activePlayerIndex[foundTeamIndex] >= this.teamMembers[foundTeamIndex].length ) {
+                console.log('Removed last player for team 1.  resetting active player index')
+                this.activePlayerIndex[foundTeamIndex] = 0
+            } 
         }
     }
 

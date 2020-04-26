@@ -15,6 +15,10 @@ const getGameFromSocketId = function(socketId) {
     return roomData[socketData[socketId].roomName]
 }
 
+const getNicknameFromSocketId = function(socketId) {
+    return socketData[socketId] ? socketData[socketId].nickname : ''
+}
+
 var handler = function(io) {
     io.on('connection', (socket) => {
         console.log('connection::' + socket.id)
@@ -53,7 +57,7 @@ var handler = function(io) {
         })
 
         socket.on('startGame', function() {
-            console.log(`startGame()::socket.id=${socket.id}`);
+            console.log(`startGame()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
             game = getGameFromSocketId(socket.id)
             game.startGame()
             console.log(game)
@@ -61,7 +65,7 @@ var handler = function(io) {
         })
 
         socket.on('startRound', function() {
-            console.log(`startRound()::socket.id=${socket.id}`);
+            console.log(`startRound()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
             game = getGameFromSocketId(socket.id)
             game.startRound()
             console.log(game)
@@ -69,7 +73,7 @@ var handler = function(io) {
         })
 
         socket.on('startTurn', function(gameData) {
-            console.log(`startTurn()::socket.id=${socket.id}`);
+            console.log(`startTurn()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
             game = getGameFromSocketId(socket.id)
             game.startTurn()
             console.log(game)
@@ -77,7 +81,7 @@ var handler = function(io) {
         })
 
         socket.on('endTurn', function(gameData) {
-            console.log(`endTurn()::socket.id=${socket.id}`);
+            console.log(`endTurn()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
             game = getGameFromSocketId(socket.id)
             game.endTurn()
             console.log(game)
@@ -93,7 +97,7 @@ var handler = function(io) {
         })
 
         socket.on('cardPass', function(gameData) {
-            console.log(`cardPass()::socket.id=${socket.id}`);
+            console.log(`cardPass()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
             game = getGameFromSocketId(socket.id)
             game.cardPass()
             console.log(game)
@@ -101,7 +105,7 @@ var handler = function(io) {
         })
 
         socket.on('disconnect', (reason) => {
-            console.log('disconnect::' + socket.id + '::' + reason);
+            console.log(`disconnect(${reason})::socket.id=${socket.id}::nickname=${getNicknameFromSocketId(socket.id)}`);
 
             if (!socketData[socket.id]) {
                 console.log('Unable to find socketData.  Zombie connection.')
