@@ -65,7 +65,6 @@ export default {
       return {
         timer: null,
         timerLength: process.env.VUE_APP_TIMER_LENGTH,
-        foo: ''
       }
     },
     computed: {

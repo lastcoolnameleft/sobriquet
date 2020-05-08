@@ -66,12 +66,13 @@ export default {
     },
     data() {
       return {
-        nicknameJoin: 'tommy2',
-        nicknameCreate: 'tommy',
+        timerLength: process.env.VUE_APP_CREATE_TIMER_LENGTH,
+        nicknameJoin: process.env.VUE_APP_JOIN_NICKNAME,
+        nicknameCreate: process.env.VUE_APP_CREATE_NICKNAME,
         roomName: '',
-        team1Name: 'Team 1',
-        team2Name: 'Team 2',
-        numCards: 5,
+        team1Name: process.env.VUE_APP_CREATE_TEAM1_NAME,
+        team2Name: process.env.VUE_APP_CREATE_TEAM2_NAME,
+        numCards: process.env.VUE_APP_CREATE_NUMBER_OF_CARDS,
       }
     },
     methods: {
