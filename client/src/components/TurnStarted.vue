@@ -5,6 +5,9 @@
               <h5 class="scores blue">
                 Team #1 : {{team1Score}}
               </h5>
+              <h5 class="scores black">
+                Timer : {{displayTimerLength}}
+              </h5>
               <h5 class="scores purple">
                 Team #2 : {{team2Score}}
               </h5>
@@ -65,6 +68,8 @@ export default {
       return {
         timer: null,
         timerLength: process.env.VUE_APP_TIMER_LENGTH,
+        displayTimer: null,
+        displayTimerLength: process.env.VUE_APP_TIMER_LENGTH - 1,
       }
     },
     computed: {
@@ -90,6 +95,14 @@ export default {
         },
     },
     created: function() {
+      this.displayTimer = setInterval(function() {
+        if (this.displayTimerLength > 0) {
+          this.displayTimerLength--
+        } else {
+          clearTimeout(this.displayTimer)
+        }
+      }.bind(this), 1000)
+
       if (this.isActivePlayer) {
         this.timer = setTimeout(function() {
           console.log('TIMER COMPLETE')
@@ -99,6 +112,7 @@ export default {
       }
     },
     beforeDestroy () {
+      clearTimeout(this.displayTimer)
       if (this.isActivePlayer) {
         clearTimeout(this.timer)
       }
@@ -383,6 +397,12 @@ export default {
   display: inline-block;
   margin: 15px auto 15px auto;
   
+}
+
+.black {
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .blue {
