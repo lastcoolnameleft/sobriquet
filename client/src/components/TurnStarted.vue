@@ -31,7 +31,7 @@
                     <div>It's your team's turn!</div>
                 </h3>
                 <h3 class="active-team">
-                    <div>STOP PAYING ATTENTION TO THE SCREEN AND GUESS!</div>
+                    <div>UNMUTE YOUR MIC AND GUESS!</div>
                 </h3>
               </div>
             </div>
@@ -41,7 +41,7 @@
                     <div>It's NOT your team's turn!</div>
                 </h3>
                 <h3 class="inactive-team">
-                    <div>NO GUESSING</div>
+                    <div>Sssshhhh.... MUTE YOUR MIC!</div>
                 </h3>
               </div>
             </div>
