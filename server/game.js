@@ -16,9 +16,8 @@ class Game {
     */
 
 
-    constructor(team1Name, team2Name, numCards, host) {
+    constructor(team1Name, team2Name, numCards, host, roomName = this.generateRandomString(4)) {
         console.log(`Game(${team1Name}, ${team2Name}, ${numCards}, ${host})`)
-        var roomName = this.generateRandomString(4)
         this.roomName = roomName
         this.host = host
         this.teamNames = [ team1Name, team2Name ]

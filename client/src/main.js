@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import Game from './components/Game.vue'
 import store from './store/game'
 import VueSocketIO from 'vue-socket.io'
+import SocketIO from "socket.io-client"
 
 Vue.config.productionTip = false
 
@@ -10,7 +11,7 @@ Vue.use(Vuex)
 
 Vue.use(new VueSocketIO({
   debug: false,
-  connection: process.env.VUE_APP_SOCKET_URL
+  connection: SocketIO(process.env.VUE_APP_SOCKET_URL),
 }))
 
 new Vue({

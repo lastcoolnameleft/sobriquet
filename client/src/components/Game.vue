@@ -29,26 +29,40 @@ export default {
     sockets: {
         connect: function (reason) {
             console.log('APP:socket connected::' + reason)
+            console.log(this.$store.state)
+            if (this.$store.state.roomName && this.$store.state.nickname) {
+                console.log('APP:socket attempting to rejoin')
+                this.$socket.emit('rejoinGame', this.$store.state.roomName, this.$store.state.nickname);
+            }
         },
         error: function (reason) {
             console.log('APP:socket error::' + reason)
         },
         disconnect: function (reason) {
             console.log('APP:socket disconnect::' + reason)
-            this.errorData = { type: 'Disconnect', description: reason }
+            this.errorData = { type: 'Disconnect', reason }
         },
         reconnect: function (reason) {
             console.log('APP:socket reconnect::' + reason)
+            //this.$socket.emit('reconnect');
+            this.errorData = { type: 'Reconnect', reason }
         },
         reconnecting: function (reason) {
             console.log('APP:socket reconnecting::' + reason)
+            //this.$socket.emit('reconnecting', this.roomName);
+            this.errorData = { type: 'Reconnecting', reason }
         },
         connecting: function (reason) {
             console.log('APP:socket connecting::' + reason)
         },
+        clientError: function (type, reason) {
+            console.log(`APP:socket Client Error:: ${type} + ${reason}`)
+            this.errorData = { type, reason }
+        },
         gameData: function(data) {
             console.log('APP:game data')
             console.log(data)
+            this.errorData = {}
             this.setStore(data)
         },
         customEmit: function () {

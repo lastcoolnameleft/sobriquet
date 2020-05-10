@@ -19,18 +19,30 @@ const getNicknameFromSocketId = function(socketId) {
     return socketData[socketId] ? socketData[socketId].nickname : ''
 }
 
+const addSocketToGame = function(socket, roomName, nickname) {
+    console.log(`addSocketToGame(${socket.id}, ${roomName}, ${nickname})`)
+    socketData[socket.id] = { roomName, nickname };
+    socket.join(roomName);
+}
+
+const createFakeGame = function() {
+    console.log('creating fake game')
+    roomData['FAKE'] = new Game('Team 1', 'team 2', 5, 'blarg', 'FAKE')
+}
+//createFakeGame()
+
 var handler = function(io) {
     io.on('connection', (socket) => {
         console.log('connection::' + socket.id)
+
 
         socket.on('createGame', function(team1Name, team2Name, numCards, nickname) {
             console.log(`createGame(${team1Name}, ${team2Name}, ${numCards}, ${nickname})::socket.id=${socket.id})`)
             const game = new Game(team1Name, team2Name, numCards, nickname)
             const roomName = game.roomName
-            console.log(game);
+            
             roomData[roomName] = game;
-            socketData[socket.id] = { roomName, nickname };
-            socket.join(roomName);
+            addSocketToGame(socket, roomName, nickname)
             console.log(game)
             io.to(roomName).emit('gameData', game.getData());
         })
@@ -40,18 +52,17 @@ var handler = function(io) {
             game = roomData[roomName]
             console.log(game);
             if (!isRoomValid(roomName)) {
-                console.log('INVALID ROOM NAME:' + roomName)
-                io.to(roomName).emit('invalid-room');
+                console.log(`Invalid room name (${roomName}).  Unable to join`)
+                io.emit('clientError', `Unable to find room ${roomName}`);
                 return
             }
             if (game.isDuplicateNickname(nickname)) {
                 console.log('DUPLICATE NICKNAME:' + nickname)
-                io.to(roomName).emit('duplciate-nickname');
+                io.emit('clientError', `Duplicate nickname ${nickname}`);
                 return
             }
             game.joinGame(nickname)
-            socketData[socket.id] = { roomName, nickname }
-            socket.join(roomName)
+            addSocketToGame(socket, roomName, nickname)
             console.log(game)
             io.to(roomName).emit('gameData', game.getData());
         })
@@ -127,6 +138,27 @@ var handler = function(io) {
 
         socket.on('disconnecting', (reason) => {
             console.log('disconnecting::' + socket.id + '::' + reason);
+        });
+        socket.on('reconnect', (roomName, nickname) => {
+            console.log('reconnect::' + socket.id + '::' + roomName + '::' + nickname);
+        });
+        socket.on('rejoinGame', (roomName, nickname) => {
+            console.log('rejoinGame::' + socket.id + '::' + roomName + '::' + nickname);
+            const game = roomData[roomName]
+
+            if (!isRoomValid(roomName)) {
+                console.log(`Invalid room name (${roomName}).  Zombie game`)
+                io.emit('clientError', `Unable to find room ${roomName}`);
+                return
+            }
+
+            game.joinGame(nickname)
+            addSocketToGame(socket, roomName, nickname)
+            console.log(game)
+            io.to(roomName).emit('gameData', game.getData());
+        });
+        socket.on('reconnecting', (reason) => {
+            console.log('reconnecting::' + socket.id + '::' + reason);
         });
     })
 }

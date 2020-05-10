@@ -3,7 +3,7 @@
         <div class="round-transition">
           <h2 class="round-headline"> ERROR: {{errorData.type}}</h2>
           <div class="dashed-line" />
-          <p class="round-description">{{errorData.description}}</p>
+          <p class="round-description">{{errorData.reason}}</p>
           <div class="dashed-line" />
         </div>
       </div>
