@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var fullCardList = require('./assets/cards');
+var fullCardList = require('../assets/cards');
 
 class Game {
     /*

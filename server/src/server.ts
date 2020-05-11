@@ -1,12 +1,22 @@
-#!/usr/bin/env node
+import errorHandler from "errorhandler";
+import Debug from "debug";
+import * as http from "http";
+import { handler } from './handler';
+
+const debug = Debug("server:server");
+
+import app from "./app";
+
+/**
+ * Error Handler. Provides full stack - remove for production
+ */
+app.use(errorHandler());
+
 
 /**
  * Module dependencies.
  */
 
-var app = require('../dist/src/app');
-var debug = require('debug')('server:server');
-var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -23,9 +33,7 @@ var server = http.createServer(app);
 
 // Add Sockets
 var io = require('socket.io')(server);
-var handler = require('../dist/src/handler');
-console.log(handler)
-handler.handler(io)
+handler(io)
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -94,3 +102,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+export default server;

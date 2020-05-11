@@ -1,8 +1,10 @@
+declare function require(path: string): any;
+
 var debug = require('debug')('game:socket');
 var roomData = {};
 var socketData = {};
-var fullCardList = require('./assets/cards');
-var Game = require('./game.js');
+var fullCardList = require('../assets/cards');
+var Game = require('./game');
 
 const isRoomValid = function(roomName) {
     if (roomData[roomName]) {
@@ -31,7 +33,7 @@ const createFakeGame = function() {
 }
 //createFakeGame()
 
-var handler = function(io) {
+export function handler(io) {
     io.on('connection', (socket) => {
         console.log('connection::' + socket.id)
 
@@ -49,7 +51,7 @@ var handler = function(io) {
 
         socket.on('joinGame', function(roomName, nickname) {
             console.log(`joinGame(${roomName}, ${nickname})::socket.id=${socket.id}`);
-            game = roomData[roomName]
+            const game = roomData[roomName]
             console.log(game);
             if (!isRoomValid(roomName)) {
                 console.log(`Invalid room name (${roomName}).  Unable to join`)
@@ -69,7 +71,7 @@ var handler = function(io) {
 
         socket.on('startGame', function() {
             console.log(`startGame()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.startGame()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData())
@@ -77,7 +79,7 @@ var handler = function(io) {
 
         socket.on('startRound', function() {
             console.log(`startRound()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.startRound()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData());
@@ -85,7 +87,7 @@ var handler = function(io) {
 
         socket.on('startTurn', function(gameData) {
             console.log(`startTurn()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.startTurn()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData());
@@ -93,7 +95,7 @@ var handler = function(io) {
 
         socket.on('endTurn', function(gameData) {
             console.log(`endTurn()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.endTurn()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData());
@@ -101,7 +103,7 @@ var handler = function(io) {
 
         socket.on('cardSuccess', function(gameData) {
             console.log(`cardSuccess()::socket.id=${socket.id}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.cardSuccess()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData());
@@ -109,7 +111,7 @@ var handler = function(io) {
 
         socket.on('cardPass', function(gameData) {
             console.log(`cardPass()::socket.id=${socket.id}::nickname=${socketData[socket.id].nickname}`);
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             game.cardPass()
             console.log(game)
             io.to(game.roomName).emit('gameData', game.getData());
@@ -123,7 +125,7 @@ var handler = function(io) {
                 return
             }
             
-            game = getGameFromSocketId(socket.id)
+            const game = getGameFromSocketId(socket.id)
             const nickname = socketData[socket.id].nickname
             game.removeTeamMember(nickname) 
             delete socketData[socket.id]
@@ -162,5 +164,3 @@ var handler = function(io) {
         });
     })
 }
-
-module.exports = handler;
