@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var fullCardList = require('./assets/cards');
+var fullCardList = require('../assets/cards');
 
 class Game {
     /*
@@ -33,7 +33,6 @@ class Game {
     public scores: number[];
 
     constructor(team1Name: string, team2Name: string, numCards: number, host: string, roomName?: string) {
-
         console.log(`Game(${team1Name}, ${team2Name}, ${numCards}, ${host})`)
         this.roomName = roomName ? roomName : this.generateRandomString(4);
         this.host = host

@@ -32,8 +32,7 @@ export default {
     },
     computed: {
       ...mapGetters([
-          'roomName', 'team1Members', 'team2Members', 'team1Name',
-          'team2Name', 'getState', 'isHost'
+          'roomName', 'team1Members', 'team2Members', 'team1Name', 'team2Name', 'isHost'
       ]),
     },
     methods: {

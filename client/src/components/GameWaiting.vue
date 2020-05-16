@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 export default {
     props: {
         eventBus: {
@@ -89,9 +89,6 @@ export default {
           this.setNickname(this.nicknameCreate)
           this.$socket.emit("createGame", this.team1Name, this.team2Name, this.numCards, this.nicknameCreate);
         },
-    },
-    computed: {
-      ...mapGetters([ 'getState' ]),
     },
 }
 </script>
