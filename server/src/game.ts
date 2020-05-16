@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var fullCardList = require('../assets/cards');
+var fullCardList = require('./assets/cards');
 
 class Game {
     /*
@@ -15,10 +15,27 @@ class Game {
     * Player Disconnect
     */
 
+    public roomName: string;
+    public host: string;
+    public teamNames: string[];
+    public teamMembers: string[][];
+    public gameState: string;
+    public roundState: string;
+    public turnState: string;
+    public activeRoundIndex: number;
+    public activePlayerIndex: number[];
+    public activeTeamIndex: number;
+    public activeCardIndex: number;
+    public maxSelectedCards: number;
+    public cardListSelected: number[];
+    public cardListInPlay: number[];
+    public scoredCardIndex: number[][][];
+    public scores: number[];
 
-    constructor(team1Name, team2Name, numCards, host, roomName = this.generateRandomString(4)) {
+    constructor(team1Name: string, team2Name: string, numCards: number, host: string, roomName?: string) {
+
         console.log(`Game(${team1Name}, ${team2Name}, ${numCards}, ${host})`)
-        this.roomName = roomName
+        this.roomName = roomName ? roomName : this.generateRandomString(4);
         this.host = host
         this.teamNames = [ team1Name, team2Name ]
         this.teamMembers = [ [ host ], [] ]
@@ -37,12 +54,6 @@ class Game {
             // 2 teams, 3 rounds, keep the index of each card that the team scores
             // Looks like this:  scoredCardIndex[teamInfo.currentTeamIndex][roundInfo.currentRoundIndex][List of card indexes successfully scored]
         this.scoredCardIndex = [ [ [], [], [], ], [ [], [], [], ] ]
-        this.roundNames = ['Round One', 'Round Two', 'Round Three'],
-        this.roundDescriptions = [
-                'Describe the name using any words, sounds, or gestures except the name itself',
-                'Describe the name using only one word, which can be anything except the name itself',
-                'Describe the name using just charades. No words. Sound effects are OK'
-            ]
         // Calculated values
         this.scores = [ 0, 0 ]
     }
@@ -63,9 +74,7 @@ class Game {
             maxSelectedCards: this.maxSelectedCards,
             cardListSelected: this.cardListSelected,
             cardListInPlay: this.cardListInPlay,
-            scoredCardIndex: this.scoredCardIndex,
-            roundNames: this.roundNames,
-            roundDescriptions: this.roundDescriptions
+            scoredCardIndex: this.scoredCardIndex
         }
     }
 
@@ -81,7 +90,7 @@ class Game {
     startGame() {
         console.log('startGame()')
         // In the real game, players get 8 cards and pick which 5 they want.  Randomly picking for now.
-        const randomCards = _.slice(_.shuffle(Array(fullCardList.length - 1).fill().map((_, i) => i)), 0, this.maxSelectedCards)
+        const randomCards = _.slice(_.shuffle(Array(fullCardList.length - 1).fill([]).map((_, i) => i)), 0, this.maxSelectedCards)
         this.cardListSelected = randomCards
         this.gameState = 'started'
     }
@@ -193,7 +202,7 @@ class Game {
         const team2round3 =  _.reduce(this.scoredCardIndex[1][2], function(sum, n) { return sum + fullCardList[n].pointValue }, 0)
         const team2Score = team2round1 + team2round2 + team2round3
 
-        this.scores[ team1Score, team2Score ]
+        this.scores = [ team1Score, team2Score ]
     }
 
     setActiveTeamAfterRound() {
@@ -258,4 +267,4 @@ class Game {
     }
 }
 
-module.exports = Game
+export = Game
