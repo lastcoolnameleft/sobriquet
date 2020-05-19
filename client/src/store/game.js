@@ -34,7 +34,7 @@ var store = new Vuex.Store({
       cardListSelected: [], // cards selected at the beginning of the game
       cardListInPlay: [], // starts with same list as clueListSelected, but call pop() each time clue-giver draws cards
       // 2 teams, 3 rounds, keep the index of each card that the team scores
-      // Looks like this:  scoredCardIndex[teamInfo.currentTeamIndex][roundInfo.currentRoundIndex][List of card indexes successfully scored]
+      // Looks like this:  scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex][List of card indexes successfully scored]
       scoredCardIndex: [[ [], [], [], ], [ [], [], [], ]] ,
       
       roundNames: ['Round One', 'Round Two', 'Round Three'],
@@ -147,6 +147,24 @@ var store = new Vuex.Store({
       },
       activeCard: (state, getters) => {
           return state.activeCardIndex >= 0 ? fullCardList[state.activeCardIndex] : getters.emptyCard
+      },
+      lastCorrectCard: (state) => {
+          let result = null
+          console.log('state.lastCoorectCard')
+          console.log(state.activeTeamIndex)
+          console.log(state.scoredCardIndex[state.activeTeamIndex])
+          console.log(state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex])
+          if (state.scoredCardIndex[state.activeTeamIndex] && 
+              state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex]) {
+            const currentRoundCards = state.scoredCardIndex[state.activeTeamIndex][state.activeRoundIndex]
+            if (currentRoundCards.length > 0) {
+                let cardIndex = currentRoundCards[currentRoundCards.length - 1]
+                result = fullCardList[cardIndex]
+            }
+          }
+          console.log('state.lastCoorectCard')
+          console.log(result)
+          return result
       },
       team1Name: state => {
           return state.teamNames[0]

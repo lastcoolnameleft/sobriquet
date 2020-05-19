@@ -14,7 +14,7 @@
             </div>
             <div class="timer" v-bind:style="{ 'animation-duration': timerLengthCss }" ></div>
             <div v-if="isRoundStarted && isActivePlayer">
-              <clue></clue>
+              <clue :card="this.activeCard"></clue>
               <div class="buttons-container">
                 <button
                   class="pass-button ripple-pass"
@@ -37,6 +37,8 @@
                     <div>UNMUTE YOUR MIC AND GUESS!</div>
                 </h3>
               </div>
+              <h1>Last Card</h1>
+              <clue></clue>
             </div>
             <div v-else>
               <div class="round-transition">
@@ -47,6 +49,10 @@
                     <div>Sssshhhh.... MUTE YOUR MIC!</div>
                 </h3>
               </div>
+              <div v-if="lastCorrectCard">
+                <h1 class="card-title">Last Card: </h1>
+              </div>
+              <clue :card="lastCorrectCard"></clue>
             </div>
           </div>
     </div>
@@ -75,7 +81,7 @@ export default {
     computed: {
       ...mapGetters([
         'isRoundStarted', 'isActivePlayer', 'team1Score', 'team2Score', 'isActiveTeam',
-        'numberOfCardsLeftInPlay'
+        'numberOfCardsLeftInPlay', 'activeCard', 'lastCorrectCard'
       ]),
       timerLengthCss() { return this.timerLength + 's' },
       timerLengthJs() { return this.timerLength * 1000 },
@@ -95,6 +101,8 @@ export default {
         },
     },
     created: function() {
+      console.log('lastCorrectCard')
+      console.log(this.lastCorrectCard)
       this.displayTimer = setInterval(function() {
         if (this.displayTimerLength > 0) {
           this.displayTimerLength--
