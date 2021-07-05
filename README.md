@@ -21,7 +21,7 @@ npm install
 npm run start-dev
 ```
 
-In browser, go to: http://localhost:8080/
+In your browser, go to: http://localhost:8080/
 
 ## Credits
 
